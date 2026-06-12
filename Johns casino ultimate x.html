@@ -28,6 +28,61 @@ body{
   z-index:9999;
 }
 @keyframes lights{ from{background-position:0%} to{background-position:400%} }
+
+/* ══ LOGIN SCREEN ══ */
+#loginScreen{
+  position:fixed; inset:0; z-index:10000;
+  background:radial-gradient(circle at top,#0f8f54 0%,#041b11 70%);
+  display:flex; align-items:center; justify-content:center;
+}
+.login-box{
+  background:rgba(0,0,0,0.55);
+  border:2px solid var(--gold);
+  border-radius:24px; padding:40px 36px;
+  width:min(420px,92vw);
+  backdrop-filter:blur(14px);
+  box-shadow:0 0 60px rgba(255,215,0,0.2);
+  text-align:center;
+}
+.login-box h1{
+  color:var(--gold); font-size:2.2em;
+  text-shadow:0 0 10px gold,0 0 30px orange;
+  margin-bottom:6px;
+}
+.login-box p{ color:#aaa; margin-bottom:24px; font-size:0.9em; }
+.login-tabs{ display:flex; gap:0; margin-bottom:24px; border-radius:12px; overflow:hidden; border:1.5px solid rgba(255,215,0,0.3); }
+.login-tab{
+  flex:1; padding:11px; font-weight:bold; font-size:0.95em;
+  cursor:pointer; transition:0.2s; border:none;
+  background:rgba(255,255,255,0.06); color:#aaa;
+}
+.login-tab.active{ background:rgba(255,215,0,0.18); color:gold; }
+.login-field{
+  width:100%; padding:13px 16px; border-radius:11px;
+  border:2px solid rgba(255,215,0,0.35);
+  background:rgba(0,0,0,0.4); color:white;
+  font-size:1.05em; margin-bottom:13px;
+  transition:border-color 0.2s;
+}
+.login-field:focus{ outline:none; border-color:gold; }
+.login-btn{
+  width:100%; padding:14px; border-radius:11px;
+  background:linear-gradient(135deg,#ffd700,#ff9500);
+  color:#000; font-size:1.1em; font-weight:900;
+  border:none; cursor:pointer; transition:0.2s;
+  letter-spacing:1px; margin-top:4px;
+}
+.login-btn:hover{ transform:scale(1.03); box-shadow:0 4px 20px rgba(255,165,0,0.5); }
+.login-err{ color:#ff6060; font-size:0.88em; margin-top:8px; min-height:1.3em; }
+.login-accounts-note{ color:#666; font-size:0.78em; margin-top:18px; }
+.guest-btn{
+  width:100%; padding:10px; border-radius:11px;
+  background:rgba(255,255,255,0.08); color:#aaa;
+  font-size:0.9em; border:1px solid rgba(255,255,255,0.15);
+  cursor:pointer; margin-top:10px; transition:0.2s;
+}
+.guest-btn:hover{ background:rgba(255,255,255,0.14); color:white; }
+
 header{
   background:rgba(0,0,0,0.3);
   backdrop-filter:blur(10px);
@@ -59,6 +114,20 @@ h1{
 .avatar-display{ font-size:3em; cursor:pointer; transition:0.2s; }
 .avatar-display:hover{ transform:scale(1.1); }
 #playerName{ font-size:1.1em; font-weight:bold; color:#ffd700; }
+.header-btns{ display:flex; gap:8px; justify-content:center; margin-top:8px; }
+.hdr-btn{
+  padding:6px 14px; border-radius:10px; border:1.5px solid rgba(255,215,0,0.35);
+  background:rgba(0,0,0,0.3); color:gold; font-size:0.82em;
+  cursor:pointer; transition:0.2s; font-weight:bold;
+}
+.hdr-btn:hover{ background:rgba(255,215,0,0.15); }
+
+/* XP Bar in header */
+.xp-bar-wrap{ display:flex; align-items:center; gap:8px; justify-content:center; margin-top:6px; }
+.xp-bar-bg{ width:180px; height:10px; background:#222; border-radius:10px; overflow:hidden; border:1px solid rgba(255,215,0,0.2); }
+.xp-bar-fill{ height:100%; background:linear-gradient(90deg,gold,orange); transition:width 0.5s ease; }
+.xp-bar-label{ font-size:0.78em; color:#aaa; }
+
 #app{
   width:95%; max-width:1200px; margin:auto; padding:30px 0;
   position:relative; z-index:2;
@@ -130,13 +199,70 @@ button:hover{ transform:scale(1.05); }
 @keyframes loseShake{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
 .action{ background:var(--gold); color:black; margin-top:20px; }
 .action:hover{ background:#ffea50; }
+
+/* ══ SHOP — SYSTEMATIC LAYOUT ══ */
+.shop-section{
+  background:rgba(0,0,0,0.2);
+  border-radius:16px; padding:20px; margin-bottom:24px;
+  border:1px solid rgba(255,215,0,0.15);
+}
+.shop-section-header{
+  display:flex; align-items:center; gap:10px;
+  border-bottom:1px solid rgba(255,215,0,0.2);
+  padding-bottom:12px; margin-bottom:16px;
+}
+.shop-section-header h3{ color:gold; font-size:1.1em; }
+.shop-section-header .section-icon{ font-size:1.5em; }
 .shop-item{
-  background:rgba(0,0,0,0.3);
-  border-radius:12px; padding:20px; margin:15px 0;
+  background:rgba(0,0,0,0.25);
+  border-radius:12px; padding:16px 18px; margin:10px 0;
   display:flex; justify-content:space-between; align-items:center;
   transition:0.2s; border:1px solid transparent;
 }
 .shop-item:hover{ border-color:rgba(255,215,0,0.3); }
+.shop-item-info h4{ color:white; margin-bottom:4px; font-size:0.95em; }
+.shop-item-info p{ color:#888; font-size:0.82em; }
+.shop-buy-btn{
+  background:linear-gradient(135deg,#ffd700,#ff9500);
+  color:#000; font-weight:bold; font-size:0.85em;
+  padding:9px 16px; border-radius:9px; border:none; cursor:pointer;
+  transition:0.2s; white-space:nowrap; flex-shrink:0;
+}
+.shop-buy-btn:hover{ transform:scale(1.06); }
+.shop-buy-btn:disabled{ background:#444; color:#666; cursor:default; transform:none; }
+.shop-buy-btn.owned{ background:#1a5c1a; color:#90ff90; cursor:default; transform:none; }
+
+/* Skin Grid in shop */
+.skin-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:10px;
+}
+.skin-card{
+  background:rgba(0,0,0,0.3); border-radius:12px; padding:12px;
+  text-align:center; border:2px solid transparent; transition:0.2s; cursor:pointer;
+}
+.skin-card:hover{ border-color:rgba(255,215,0,0.4); }
+.skin-card.owned-active{ border-color:gold; }
+.skin-card.owned-inactive{ border-color:rgba(0,200,0,0.4); }
+.skin-preview{ width:100%; height:42px; border-radius:8px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.15); }
+.skin-card h4{ font-size:0.82em; color:white; margin-bottom:4px; }
+.skin-card .skin-price{ font-size:0.75em; color:gold; }
+
+/* Avatar grid in shop */
+.shop-avatar-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
+  gap:10px;
+}
+.shop-avatar-item{
+  background:rgba(0,0,0,0.3); border-radius:12px;
+  padding:12px 6px; text-align:center;
+  border:2px solid transparent; transition:0.2s;
+}
+.shop-avatar-item:hover{ border-color:rgba(255,215,0,0.4); }
+.shop-avatar-item .av-icon{ font-size:2em; display:block; margin-bottom:4px; }
+.shop-avatar-item .av-price{ font-size:0.72em; color:gold; margin-bottom:4px; display:block; }
+.shop-avatar-item button{ padding:5px 8px; font-size:0.72em; border-radius:7px; border:none; cursor:pointer; font-weight:bold; }
+
 .profile-box{
   background:rgba(255,255,255,0.06);
   border:1px solid rgba(255,255,255,0.15);
@@ -185,7 +311,7 @@ button:hover{ transform:scale(1.05); }
 }
 @keyframes slideIn{ from{transform:translateX(120%)} to{transform:translateX(0)} }
 
-/* ── PROFILE EDIT ───────────────────────────────────────── */
+/* ══ PROFILE EDIT ══ */
 .profile-edit-box{
   background:rgba(0,0,0,0.3);
   border:1px solid rgba(255,215,0,0.3);
@@ -209,7 +335,7 @@ button:hover{ transform:scale(1.05); }
 .avatar-option:hover{ border-color:gold; transform:scale(1.1); }
 .avatar-option.selected{ border-color:gold; background:rgba(255,215,0,0.2); }
 
-/* ── SLOTS ─────────────────────────────────────────────── */
+/* ══ SLOTS ══ */
 .slots-machine{
   background:linear-gradient(145deg,#1a0a00,#3a1500);
   border:4px solid #ffd700;
@@ -296,7 +422,7 @@ button:hover{ transform:scale(1.05); }
 .slots-paytable td{ padding:4px 8px; }
 .slots-paytable td:last-child{ color:gold; text-align:right; }
 
-/* ── TRUCK BETTING ─────────────────────────────────────── */
+/* ══ TRUCK BETTING ══ */
 .track-wrap{
   background:linear-gradient(180deg,#1a2a0a,#0a1500);
   border:3px solid gold; border-radius:16px;
@@ -355,7 +481,28 @@ button:hover{ transform:scale(1.05); }
   margin:12px 0; min-height:2em;
 }
 
-/* ── TEXAS HOLD'EM ─────────────────────────────────────── */
+/* Hint Panel for Truck */
+.hint-panel{
+  background:rgba(0,0,0,0.3); border:1px solid rgba(255,215,0,0.3);
+  border-radius:12px; padding:14px 18px; margin:10px 0;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+}
+.hint-panel-info{ color:#ccc; font-size:0.88em; }
+.hint-panel-info strong{ color:gold; }
+.hint-use-btn{
+  padding:9px 18px; border-radius:9px; font-size:0.85em; font-weight:bold;
+  background:linear-gradient(135deg,#224499,#4466dd);
+  color:white; border:none; cursor:pointer; transition:0.2s;
+}
+.hint-use-btn:hover{ transform:scale(1.06); }
+.hint-use-btn:disabled{ background:#333; color:#555; cursor:not-allowed; transform:none; }
+.hint-result{
+  width:100%; padding:10px 14px; border-radius:10px;
+  background:rgba(0,100,200,0.15); border:1px solid rgba(100,160,255,0.3);
+  color:#aad4ff; font-size:0.88em; margin-top:4px; display:none;
+}
+
+/* ══ TEXAS HOLD'EM ══ */
 .poker-table{
   background:radial-gradient(ellipse at center,#0a6b3a 0%,#053520 100%);
   border:6px solid #5c3200;
@@ -414,7 +561,7 @@ button:hover{ transform:scale(1.05); }
 .raise-display{ text-align:center; color:gold; font-weight:bold; font-size:1em; min-height:1.4em; margin:4px 0; }
 .poker-ai-chips{ font-size:0.85em; color:#ccc; text-align:center; margin-bottom:4px; }
 
-/* ── ROULETTE ──────────────────────────────────────────── */
+/* ══ ROULETTE ══ */
 .bet-section { margin: 8px 0 4px; }
 .bet-section-label { color: #aaa; font-size: 0.82em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
 .bet-row { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 4px; }
@@ -432,7 +579,7 @@ button:hover{ transform:scale(1.05); }
 .bet-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 8px 0; }
 .payout-tag { font-size: 0.7em; color: gold; display: block; margin-top: 1px; }
 
-/* ── TOURNAMENTS ───────────────────────────────────────── */
+/* ══ TOURNAMENTS ══ */
 .tourn-tabs{ display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
 .tourn-tab{ padding:8px 18px; border-radius:10px; cursor:pointer; font-weight:bold; border:2px solid transparent; background:rgba(255,255,255,0.08); color:#ccc; transition:0.2s; }
 .tourn-tab.active{ border-color:gold; color:gold; background:rgba(255,215,0,0.1); }
@@ -445,20 +592,24 @@ button:hover{ transform:scale(1.05); }
 .bot-chip{ width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2em; }
 .tourn-progress{ min-height:3em; }
 
-/* ── SHOP AVATARS ──────────────────────────────────────── */
-.shop-avatar-grid{
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
-  gap:10px; margin-top:12px;
+/* ══ LEVEL UP OVERLAY ══ */
+.levelup-overlay{
+  position:fixed; inset:0; z-index:99998;
+  background:rgba(0,0,0,0.75); display:none;
+  align-items:center; justify-content:center;
 }
-.shop-avatar-item{
-  background:rgba(0,0,0,0.3); border-radius:12px;
-  padding:12px 6px; text-align:center;
-  border:2px solid transparent; transition:0.2s;
+.levelup-overlay.show{ display:flex; }
+.levelup-box{
+  background:linear-gradient(135deg,#1a0a00,#3a2000);
+  border:3px solid gold; border-radius:24px;
+  padding:40px; text-align:center;
+  box-shadow:0 0 60px rgba(255,200,0,0.5);
+  animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
 }
-.shop-avatar-item:hover{ border-color:rgba(255,215,0,0.4); }
-.shop-avatar-item .av-icon{ font-size:2em; display:block; margin-bottom:4px; }
-.shop-avatar-item .av-price{ font-size:0.72em; color:gold; }
-.shop-avatar-item button{ padding:6px 10px; font-size:0.75em; margin-top:6px; border-radius:8px; }
+@keyframes popIn{ from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+.levelup-box h2{ color:gold; font-size:2.5em; text-shadow:0 0 20px gold; margin-bottom:10px; }
+.levelup-box p{ color:#ccc; font-size:1.1em; }
+.levelup-close{ background:gold; color:#000; font-weight:bold; padding:12px 32px; border-radius:12px; border:none; cursor:pointer; margin-top:20px; font-size:1em; }
 
 @media(max-width:768px){
   h1{ font-size:2em; }
@@ -476,14 +627,61 @@ button:hover{ transform:scale(1.05); }
 <canvas id="particles"></canvas>
 <div class="casino-lights"></div>
 
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>🎰 John's Casino</h1>
+    <p>Login or create an account to save your progress</p>
+    <div class="login-tabs">
+      <button class="login-tab active" id="tabLogin" onclick="switchLoginTab('login')">Login</button>
+      <button class="login-tab" id="tabRegister" onclick="switchLoginTab('register')">Register</button>
+    </div>
+    <div id="loginForm">
+      <input class="login-field" id="loginUser" type="text" placeholder="Username" autocomplete="username">
+      <input class="login-field" id="loginPass" type="password" placeholder="Password" autocomplete="current-password">
+      <button class="login-btn" onclick="doLogin()">🎰 Login</button>
+      <div class="login-err" id="loginErr"></div>
+      <button class="guest-btn" onclick="doGuest()">👤 Continue as Guest (no saving)</button>
+      <div class="login-accounts-note">Your data is saved locally in this browser.</div>
+    </div>
+    <div id="registerForm" style="display:none">
+      <input class="login-field" id="regUser" type="text" placeholder="Choose a username" maxlength="20" autocomplete="username">
+      <input class="login-field" id="regPass" type="password" placeholder="Choose a password (min 4 chars)" autocomplete="new-password">
+      <input class="login-field" id="regPass2" type="password" placeholder="Confirm password" autocomplete="new-password">
+      <button class="login-btn" onclick="doRegister()">✅ Create Account</button>
+      <div class="login-err" id="registerErr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LEVEL UP OVERLAY ══ -->
+<div class="levelup-overlay" id="levelupOverlay">
+  <div class="levelup-box">
+    <div style="font-size:3em">⭐</div>
+    <h2>LEVEL UP!</h2>
+    <p id="levelupText">You reached Level 2!</p>
+    <p id="levelupBonus" style="color:gold;margin-top:8px"></p>
+    <button class="levelup-close" onclick="closeLevelUp()">🎉 Awesome!</button>
+  </div>
+</div>
+
 <header>
   <h1>🎰 John's Casino Ultimate X</h1>
   <div class="balance">
-    🪙 <span id="balance">1000</span> JohnCoins &nbsp;|&nbsp; 💡 Hints: <span id="hints">3</span> &nbsp;|&nbsp; ⭐ Level: <span id="level">1</span>
+    🪙 <span id="balance">1000</span> JohnCoins &nbsp;|&nbsp; 💡 Hints: <span id="hints">3</span>
+  </div>
+  <div class="xp-bar-wrap">
+    <span style="color:gold;font-size:0.85em">⭐ Lv.<span id="level">1</span></span>
+    <div class="xp-bar-bg"><div class="xp-bar-fill" id="headerXpFill" style="width:0%"></div></div>
+    <span class="xp-bar-label"><span id="headerXpCur">0</span>/<span id="headerXpMax">500</span> XP</span>
   </div>
   <div class="player-header">
     <div class="avatar-display" id="avatarDisplay" onclick="openProfile()">😎</div>
     <div id="playerName">Player John</div>
+  </div>
+  <div class="header-btns">
+    <button class="hdr-btn" onclick="saveGame()">💾 Save</button>
+    <button class="hdr-btn" onclick="doLogout()">🚪 Logout</button>
   </div>
 </header>
 
@@ -572,12 +770,17 @@ button:hover{ transform:scale(1.05); }
       <span style="color:gold"> JohnCoins</span>
     </div>
     <div id="truckBetInfo" style="text-align:center;color:gold;font-weight:bold;min-height:1.4em;margin:6px 0"></div>
+    <!-- HINT PANEL -->
+    <div class="hint-panel">
+      <div class="hint-panel-info">💡 You have <strong id="hintCountTruck">3</strong> hints — use one to reveal insider info about the race!</div>
+      <button class="hint-use-btn" id="hintUseBtnTruck" onclick="useHintTruck()">Use Hint</button>
+      <div class="hint-result" id="hintResultTruck"></div>
+    </div>
     <div class="race-progress-bar"><div class="race-progress-fill" id="raceProgressFill"></div></div>
     <div class="race-result-box" id="truckRaceResult"></div>
     <div style="text-align:center;margin-top:10px">
       <button id="truckStartBtn" onclick="startRace()" style="background:linear-gradient(135deg,#ff8c00,#ffd700);color:#000;font-size:1.1em;padding:14px 32px;border-radius:14px;font-weight:900;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(255,160,0,0.5)">🏁 START RACE</button>
     </div>
-    <div style="text-align:center;margin-top:10px;font-size:0.85em;color:#888" id="truckHintInfo"></div>
     <button class="action" onclick="backMenu()">← Tilbake</button>
   </div>
 </div>
@@ -672,28 +875,52 @@ button:hover{ transform:scale(1.05); }
 <div id="shop" class="screen">
   <div class="game-area">
     <h2>🛒 Shop</h2>
-    <!-- Boosts -->
-    <h3 style="color:gold;margin:12px 0 8px">⚡ Boosts</h3>
-    <div class="shop-item">
-      <div><h3>💎 VIP</h3><p>2x gevinst på alle spill</p></div>
-      <button class="action" id="shopVipBtn" onclick="buyVip()">🪙 1000</button>
+    <p style="color:#888;font-size:0.88em;margin-bottom:20px">Balance: 🪙 <span id="shopBalanceDisplay">0</span> JohnCoins</p>
+
+    <!-- Boosts Section -->
+    <div class="shop-section">
+      <div class="shop-section-header">
+        <span class="section-icon">⚡</span>
+        <h3>Power-Ups & Boosts</h3>
+      </div>
+      <div class="shop-item">
+        <div class="shop-item-info"><h4>💎 VIP Pass</h4><p>2x winnings on all games</p></div>
+        <button class="shop-buy-btn" id="shopVipBtn" onclick="buyVip()">🪙 1,000</button>
+      </div>
+      <div class="shop-item">
+        <div class="shop-item-info"><h4>💡 Hints ×3</h4><p>Reveal insider info in Truck Betting</p></div>
+        <button class="shop-buy-btn" onclick="buyHints()">🪙 300</button>
+      </div>
+      <div class="shop-item">
+        <div class="shop-item-info"><h4>🍀 Lucky Card</h4><p>Automatically save your next loss</p></div>
+        <button class="shop-buy-btn" onclick="buyLucky()">🪙 700</button>
+      </div>
+      <div class="shop-item">
+        <div class="shop-item-info"><h4>⭐ XP Boost</h4><p>Double XP on all games for 10 rounds</p></div>
+        <button class="shop-buy-btn" onclick="buyXpBoost()">🪙 500</button>
+      </div>
     </div>
-    <div class="shop-item">
-      <div><h3>💡 Hint ×3</h3><p>Brukes i Truck Betting</p></div>
-      <button class="action" onclick="buyHints()">🪙 300</button>
+
+    <!-- Avatars Section -->
+    <div class="shop-section">
+      <div class="shop-section-header">
+        <span class="section-icon">🧑</span>
+        <h3>Profile Avatars</h3>
+      </div>
+      <div class="shop-avatar-grid" id="shopAvatarGrid"></div>
     </div>
-    <div class="shop-item">
-      <div><h3>🍀 Lucky Card</h3><p>Neste tap reddes automatisk</p></div>
-      <button class="action" onclick="buyLucky()">🪙 700</button>
+
+    <!-- Skins Section -->
+    <div class="shop-section">
+      <div class="shop-section-header">
+        <span class="section-icon">🎨</span>
+        <h3>Background Skins</h3>
+      </div>
+      <!-- Skin category tabs -->
+      <div class="tourn-tabs" id="skinCategoryTabs" style="margin-bottom:14px"></div>
+      <div class="skin-grid" id="shopSkinGrid"></div>
     </div>
-    <hr style="border-color:rgba(255,255,255,0.1);margin:20px 0">
-    <!-- Avatars -->
-    <h3 style="color:gold;margin-bottom:10px">🧑 Profilbilder</h3>
-    <div class="shop-avatar-grid" id="shopAvatarGrid"></div>
-    <hr style="border-color:rgba(255,255,255,0.1);margin:20px 0">
-    <!-- Skins -->
-    <h3 style="color:gold;margin-bottom:10px">🎨 Skins</h3>
-    <div id="shopSkinList"></div>
+
     <button class="action" onclick="backMenu()">← Tilbake</button>
   </div>
 </div>
@@ -714,9 +941,11 @@ button:hover{ transform:scale(1.05); }
         <label style="color:gold;font-weight:bold;display:block;margin-bottom:8px">Choose Avatar:</label>
         <div class="avatar-grid" id="avatarGrid"></div>
       </div>
-      <p style="margin-top:12px">Level: <span id="profileLevel">1</span></p>
+      <p style="margin-top:14px;color:gold;font-weight:bold">Level <span id="profileLevel">1</span></p>
+      <div style="color:#888;font-size:0.82em;margin:4px 0" id="profileXpLabel">0 / 500 XP to next level</div>
       <div class="progress-bar"><div class="progress-fill" id="xpFill"></div></div>
       <p style="margin-top:12px">🪙 JohnCoins: <strong id="profileBalance">0</strong></p>
+      <p style="margin-top:8px">🏆 Wins: <strong id="profileWins">0</strong> &nbsp; ❌ Losses: <strong id="profileLosses">0</strong></p>
     </div>
     <button class="action" onclick="backMenu()">← Tilbake</button>
   </div>
@@ -794,20 +1023,172 @@ button:hover{ transform:scale(1.05); }
 
 <script>
 // ══════════════════════════════════════════════
+//  ACCOUNT / SAVE SYSTEM
+// ══════════════════════════════════════════════
+const ACCOUNTS_KEY = 'jcasino_accounts';
+const SAVE_KEY_PREFIX = 'jcasino_save_';
+let currentUser = null; // null = guest
+
+function getAccounts(){
+  try{ return JSON.parse(localStorage.getItem(ACCOUNTS_KEY)||'{}'); }
+  catch(e){ return {}; }
+}
+function saveAccounts(accounts){
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+}
+
+function switchLoginTab(tab){
+  document.getElementById('loginForm').style.display = tab==='login'?'':'none';
+  document.getElementById('registerForm').style.display = tab==='register'?'':'none';
+  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active', tab==='register');
+  document.getElementById('loginErr').innerText='';
+  document.getElementById('registerErr').innerText='';
+}
+
+function doLogin(){
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  if(!user||!pass){ err.innerText='Please fill in both fields.'; return; }
+  const accounts = getAccounts();
+  if(!accounts[user]){ err.innerText='Account not found. Register first!'; return; }
+  if(accounts[user].password !== hashPass(pass)){ err.innerText='Incorrect password.'; return; }
+  currentUser = user;
+  loadSave(user);
+  hideLockScreen();
+}
+
+function doRegister(){
+  const user = document.getElementById('regUser').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  const err = document.getElementById('registerErr');
+  if(!user||!pass||!pass2){ err.innerText='Please fill in all fields.'; return; }
+  if(user.length<2){ err.innerText='Username must be at least 2 characters.'; return; }
+  if(!/^[a-zA-Z0-9_]+$/.test(user)){ err.innerText='Username: letters, numbers, underscores only.'; return; }
+  if(pass.length<4){ err.innerText='Password must be at least 4 characters.'; return; }
+  if(pass!==pass2){ err.innerText='Passwords do not match.'; return; }
+  const accounts = getAccounts();
+  if(accounts[user]){ err.innerText='Username already taken!'; return; }
+  accounts[user] = { password: hashPass(pass), created: Date.now() };
+  saveAccounts(accounts);
+  // Create fresh save with player name = username
+  state.playerName = user;
+  currentUser = user;
+  saveGame();
+  hideLockScreen();
+  showAchievement('🎉 Welcome, '+user+'! Account created.');
+}
+
+function doGuest(){
+  currentUser = null;
+  hideLockScreen();
+  showAchievement('👤 Playing as Guest — progress won\'t be saved.');
+}
+
+function hideLockScreen(){
+  document.getElementById('loginScreen').style.display='none';
+}
+
+function doLogout(){
+  if(currentUser) saveGame();
+  currentUser = null;
+  // Reset state
+  state = makeDefaultState();
+  updateUI();
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginErr').innerText='';
+  document.getElementById('registerErr').innerText='';
+  document.getElementById('regUser').value='';
+  document.getElementById('regPass').value='';
+  document.getElementById('regPass2').value='';
+  unlockedAchievements = new Set();
+  screen('menu');
+}
+
+function saveGame(){
+  if(!currentUser){ showAchievement('👤 Guest mode — create an account to save!'); return; }
+  const saveData = { state, unlocked: [...unlockedAchievements], savedAt: Date.now() };
+  localStorage.setItem(SAVE_KEY_PREFIX + currentUser, JSON.stringify(saveData));
+  showAchievement('💾 Saved!');
+}
+
+function loadSave(user){
+  const raw = localStorage.getItem(SAVE_KEY_PREFIX + user);
+  if(!raw){ state = makeDefaultState(); state.playerName = user; return; }
+  try{
+    const saveData = JSON.parse(raw);
+    state = Object.assign(makeDefaultState(), saveData.state||{});
+    unlockedAchievements = new Set(saveData.unlocked||[]);
+    showAchievement('📂 Save loaded — welcome back, '+user+'!');
+  } catch(e){ state = makeDefaultState(); state.playerName = user; }
+}
+
+// Simple hash (not crypto, just obfuscation)
+function hashPass(p){
+  let h=0; for(let i=0;i<p.length;i++) h=((h<<5)-h)+p.charCodeAt(i), h|=0;
+  return 'h'+Math.abs(h).toString(36);
+}
+
+// ══════════════════════════════════════════════
+//  XP / LEVEL SYSTEM  — Scaling requirements
+// ══════════════════════════════════════════════
+// XP needed for each level = 500 * level^1.5  (level 1→2 = 500, 2→3 = 1414, 3→4 = 2598, etc.)
+function xpForLevel(lvl){ return Math.floor(500 * Math.pow(lvl, 1.5)); }
+function currentLevelXpNeeded(){ return xpForLevel(state.level); }
+
+function gainXP(amount){
+  const xpGain = state.xpBoostRounds > 0 ? amount * 2 : amount;
+  if(state.xpBoostRounds > 0) state.xpBoostRounds--;
+  state.xp += xpGain;
+  let leveled = false;
+  while(state.xp >= currentLevelXpNeeded()){
+    state.xp -= currentLevelXpNeeded();
+    state.level++;
+    leveled = true;
+    // Level rewards
+    let bonus = 0;
+    if(state.level % 5 === 0) bonus = state.level * 200;
+    else if(state.level % 10 === 0){ bonus = state.level * 500; state.hints += 2; }
+    if(bonus > 0) state.balance += bonus;
+    showLevelUp(state.level, bonus);
+  }
+  if(leveled) updateUI();
+}
+
+function showLevelUp(lvl, bonus){
+  const overlay = document.getElementById('levelupOverlay');
+  document.getElementById('levelupText').innerText = `You reached Level ${lvl}!`;
+  document.getElementById('levelupBonus').innerText = bonus > 0 ? `🎁 Level reward: +${bonus.toLocaleString()} JohnCoins!` : '';
+  overlay.classList.add('show');
+}
+function closeLevelUp(){
+  document.getElementById('levelupOverlay').classList.remove('show');
+  updateUI();
+}
+
+// ══════════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════════
-let state = {
-  balance:1000, hints:3, level:1, xp:0,
-  gamesPlayed:0, wins:0, losses:0,
-  rouletteSpins:0, casesOpened:0, tourneysWon:0,
-  slotSpins:0, pokerHands:0, truckRaces:0,
-  vip:false, lucky:false,
-  ownedSkins:['green'], activeSkin:'green',
-  ownedAvatars:['😎','🤠','😏'],
-  activeAvatar:'😎',
-  playerName:'Player John',
-  _slotJackpot:false, _pokerWins:0, _truckWins:0, _tournamentsWon:0
-};
+function makeDefaultState(){
+  return {
+    balance:1000, hints:3, level:1, xp:0,
+    gamesPlayed:0, wins:0, losses:0,
+    rouletteSpins:0, casesOpened:0, tourneysWon:0,
+    slotSpins:0, pokerHands:0, truckRaces:0,
+    vip:false, lucky:false, xpBoostRounds:0,
+    ownedSkins:['green'], activeSkin:'green',
+    ownedAvatars:['😎','🤠','😏'],
+    activeAvatar:'😎',
+    playerName:'Player John',
+    _slotJackpot:false, _pokerWins:0, _truckWins:0, _tournamentsWon:0,
+    _bigBet:false, _luckySaved:false
+  };
+}
+let state = makeDefaultState();
 
 // ══════════════════════════════════════════════
 //  ACHIEVEMENTS
@@ -821,6 +1202,7 @@ const ACHIEVEMENTS_DEF = [
   { id:"millionaire",  label:"💵 Millionær",           desc:"Ha 50 000+ JohnCoins",           check:s=>s.balance>=50000 },
   { id:"level5",       label:"⭐ Level 5",             desc:"Nå level 5",                     check:s=>s.level>=5 },
   { id:"level10",      label:"🌟 Level 10",            desc:"Nå level 10",                    check:s=>s.level>=10 },
+  { id:"level20",      label:"💫 Level 20",            desc:"Nå level 20",                    check:s=>s.level>=20 },
   { id:"roulette3",    label:"🎡 Roulette-fan",        desc:"Spin roulette 3 ganger",         check:s=>s.rouletteSpins>=3 },
   { id:"roulette25",   label:"🎡 Roulette-mester",     desc:"Spin roulette 25 ganger",        check:s=>s.rouletteSpins>=25 },
   { id:"case5",        label:"🎁 Case-åpner",          desc:"Åpne 5 cases",                   check:s=>s.casesOpened>=5 },
@@ -832,11 +1214,11 @@ const ACHIEVEMENTS_DEF = [
   { id:"truck_win1",   label:"🚛 Rookie Racer",        desc:"Vinn 1 truck-race",              check:s=>s._truckWins>=1 },
   { id:"truck_win10",  label:"🚛 Truck Legend",        desc:"Vinn 10 truck-races",            check:s=>s._truckWins>=10 },
   { id:"broke",        label:"💸 Broke",               desc:"Gå tom for JohnCoins",           check:s=>s.balance<=0 },
-  { id:"hoarder",      label:"🐉 Drager",              desc:"Ha 200+ JohnCoins uten å spille",check:s=>s.balance>=200&&s.gamesPlayed===0 },
   { id:"highroller",   label:"🎩 High Roller",         desc:"Spill med 1000+ innsats",        check:s=>s._bigBet },
   { id:"lucky_saved",  label:"🍀 Lucky Save",          desc:"Bli reddet av Lucky Card",       check:s=>s._luckySaved },
   { id:"skin_collect", label:"🎨 Skin-samleren",       desc:"Eie 5+ skins",                   check:s=>s.ownedSkins.length>=5 },
   { id:"avatar_collect",label:"🧑 Avatar-jeger",       desc:"Eie 5+ avatarer",                check:s=>s.ownedAvatars.length>=5 },
+  { id:"xp_booster",   label:"⭐ XP Fanatic",         desc:"Bruk XP Boost",                  check:s=>s._usedXpBoost },
 ];
 let unlockedAchievements = new Set();
 
@@ -860,6 +1242,12 @@ function updateUI() {
   document.getElementById("level").innerText   = state.level;
   document.getElementById("avatarDisplay").innerText = state.activeAvatar;
   document.getElementById("playerName").innerText    = state.playerName;
+  // XP bar
+  const xpMax = currentLevelXpNeeded();
+  const xpPct = Math.min(100, (state.xp / xpMax) * 100);
+  document.getElementById('headerXpFill').style.width = xpPct + '%';
+  document.getElementById('headerXpCur').innerText = state.xp;
+  document.getElementById('headerXpMax').innerText = xpMax;
   checkAchievements();
 }
 function screen(id) {
@@ -887,7 +1275,6 @@ function shuffle(a){
     const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];
   }
 }
-function bumpBalance(){ }
 
 // ══════════════════════════════════════════════
 //  PROFILE EDITOR
@@ -913,8 +1300,11 @@ function openProfile(){
   document.getElementById("profileLevel").innerText   = state.level;
   document.getElementById("profileBalance").innerText = state.balance.toLocaleString();
   document.getElementById("profileAvatar").innerText  = state.activeAvatar;
-  document.getElementById("xpFill").style.width = Math.min(100,(state.xp/(state.level*100))*100)+"%";
-  // Build avatar grid
+  document.getElementById("profileWins").innerText    = state.wins;
+  document.getElementById("profileLosses").innerText  = state.losses;
+  const xpMax = currentLevelXpNeeded();
+  document.getElementById("profileXpLabel").innerText = `${state.xp} / ${xpMax} XP to next level`;
+  document.getElementById("xpFill").style.width = Math.min(100,(state.xp/xpMax)*100)+"%";
   const grid=document.getElementById("avatarGrid");
   grid.innerHTML='';
   state.ownedAvatars.forEach(av=>{
@@ -941,24 +1331,107 @@ function saveName(){
 }
 
 // ══════════════════════════════════════════════
+//  SKINS — Extended + categorized
+// ══════════════════════════════════════════════
+const SKIN_CATEGORIES = {
+  all:    { label:'All' },
+  nature: { label:'🌿 Nature' },
+  space:  { label:'🌌 Space' },
+  fire:   { label:'🔥 Elemental' },
+  special:{ label:'✨ Special' },
+  dark:   { label:'🖤 Dark' },
+};
+
+const SKIN_DEFS = {
+  // FREE
+  green:   { label:'🌿 Grønn',      bg:'radial-gradient(circle at top,#0f8f54 0%,#041b11 70%)',  price:0,    cat:'nature' },
+  // NATURE
+  forest:  { label:'🌲 Skog',       bg:'radial-gradient(circle at top,#1a5a1a 0%,#051005 70%)',  price:700,  cat:'nature' },
+  ocean:   { label:'🌊 Hav',        bg:'radial-gradient(circle at top,#0040a0 0%,#001030 70%)',  price:800,  cat:'nature' },
+  sunset:  { label:'🌅 Solnedgang', bg:'radial-gradient(circle at top,#b05000 0%,#300010 70%)',  price:800,  cat:'nature' },
+  tropical:{ label:'🌺 Tropisk',    bg:'radial-gradient(circle at top,#008040 0%,#002810 70%)',  price:600,  cat:'nature' },
+  arctic:  { label:'🧊 Arktis',     bg:'radial-gradient(circle at top,#a0d8ef 0%,#003050 70%)',  price:900,  cat:'nature' },
+  desert:  { label:'🏜️ Ørken',     bg:'radial-gradient(circle at top,#c8a020 0%,#301800 70%)',  price:700,  cat:'nature' },
+  // SPACE
+  galaxy:  { label:'🌌 Galakse',    bg:'radial-gradient(circle at top,#200040 0%,#000010 70%)',  price:1200, cat:'space' },
+  nebula:  { label:'🔮 Nebula',     bg:'radial-gradient(circle at top,#4a0080 0%,#000820 70%)',  price:1400, cat:'space' },
+  mars:    { label:'🪐 Mars',       bg:'radial-gradient(circle at top,#8b2500 0%,#1a0500 70%)',  price:1100, cat:'space' },
+  cosmos:  { label:'🌠 Kosmos',     bg:'radial-gradient(circle at top,#000033 0%,#000000 70%)',  price:1000, cat:'space' },
+  aurora:  { label:'🌌 Aurora',     bg:'radial-gradient(circle at top,#006060 0%,#000820 70%)',  price:1300, cat:'space' },
+  // ELEMENTAL
+  fire:    { label:'🔥 Ild',        bg:'radial-gradient(circle at top,#cc2200 0%,#200000 70%)',  price:1000, cat:'fire' },
+  ice:     { label:'🧊 Is',         bg:'radial-gradient(circle at top,#60c0e0 0%,#001020 70%)',  price:1000, cat:'fire' },
+  thunder: { label:'⚡ Torden',     bg:'radial-gradient(circle at top,#4a4a00 0%,#0a0a00 70%)',  price:1100, cat:'fire' },
+  lava:    { label:'🌋 Lava',       bg:'radial-gradient(circle at top,#cc4400 0%,#1a0000 70%)',  price:1200, cat:'fire' },
+  storm:   { label:'🌪️ Storm',     bg:'radial-gradient(circle at top,#304050 0%,#050a10 70%)',  price:900,  cat:'fire' },
+  earth:   { label:'🪨 Jord',       bg:'radial-gradient(circle at top,#5a3a10 0%,#100800 70%)',  price:700,  cat:'fire' },
+  // SPECIAL
+  gold:    { label:'✨ Gull',       bg:'radial-gradient(circle at top,#a08000 0%,#201000 70%)',  price:2000, cat:'special' },
+  diamond: { label:'💎 Diamant',    bg:'radial-gradient(circle at top,#80d0f0 0%,#0a1a30 70%)',  price:2500, cat:'special' },
+  neon:    { label:'💜 Neon',       bg:'radial-gradient(circle at top,#8000ff 0%,#100020 70%)',  price:1500, cat:'special' },
+  cyber:   { label:'🤖 Cyber',      bg:'linear-gradient(180deg,#001a1a 0%,#00ff88 15%,#001a1a 30%,#001a1a 100%)', price:1800, cat:'special' },
+  rainbow: { label:'🌈 Regnbue',    bg:'linear-gradient(135deg,#ff0000,#ff8000,#ffff00,#00ff00,#0000ff,#8000ff)', price:3000, cat:'special' },
+  hologram:{ label:'🔆 Hologram',   bg:'linear-gradient(135deg,#00ffff,#ff00ff,#00ffff)', price:2800, cat:'special' },
+  vip:     { label:'👑 VIP',        bg:'radial-gradient(circle at top,#8a6500 0%,#1a1000 70%)',  price:4000, cat:'special' },
+  // DARK
+  black:   { label:'⬛ Svart',      bg:'radial-gradient(circle at top,#1a1a1a 0%,#000000 70%)',  price:1000, cat:'dark' },
+  shadow:  { label:'🌑 Skygge',     bg:'radial-gradient(circle at top,#0a0020 0%,#000000 70%)',  price:1100, cat:'dark' },
+  void:    { label:'🕳️ Tomrom',    bg:'radial-gradient(circle at top,#050005 0%,#000000 70%)',  price:1200, cat:'dark' },
+  blood:   { label:'🩸 Blod',       bg:'radial-gradient(circle at top,#400000 0%,#000000 70%)',  price:1300, cat:'dark' },
+  midnight:{ label:'🌙 Midnatt',    bg:'radial-gradient(circle at top,#000830 0%,#000000 70%)',  price:800,  cat:'dark' },
+  // COLORS
+  red:     { label:'🟥 Rød',        bg:'radial-gradient(circle at top,#8f1a0f 0%,#1b0400 70%)',  price:500,  cat:'nature' },
+  blue:    { label:'🔵 Blå',        bg:'radial-gradient(circle at top,#0f4a8f 0%,#020d1b 70%)',  price:500,  cat:'nature' },
+  purple:  { label:'🟣 Lilla',      bg:'radial-gradient(circle at top,#5a0f8f 0%,#0e0018 70%)',  price:600,  cat:'nature' },
+  pink:    { label:'🩷 Rosa',       bg:'radial-gradient(circle at top,#8f0f6a 0%,#1b0015 70%)',  price:600,  cat:'nature' },
+  yellow:  { label:'🟡 Gul',        bg:'radial-gradient(circle at top,#8f7c0f 0%,#1b1600 70%)',  price:600,  cat:'nature' },
+  orange:  { label:'🟠 Oransje',    bg:'radial-gradient(circle at top,#8f4a0f 0%,#1b0800 70%)',  price:600,  cat:'nature' },
+  white:   { label:'⬜ Hvit',       bg:'radial-gradient(circle at top,#e0e0e0 0%,#a0a0a0 70%)',  price:1000, cat:'dark' },
+};
+
+let activeSkinCategory = 'all';
+
+// ══════════════════════════════════════════════
 //  SHOP
 // ══════════════════════════════════════════════
-function openShop(){ screen("shop"); renderShopAvatars(); renderShopSkins(); refreshShopBtns(); }
+function openShop(){
+  screen("shop");
+  document.getElementById('shopBalanceDisplay').innerText = state.balance.toLocaleString();
+  renderShopAvatars();
+  renderShopSkinCategories();
+  renderShopSkins();
+  refreshShopBtns();
+}
+
+function refreshShopBtns(){
+  const vipBtn=document.getElementById("shopVipBtn");
+  if(vipBtn && state.vip){ vipBtn.textContent="✅ Active"; vipBtn.classList.add('owned'); vipBtn.onclick=null; }
+}
+
 function buyVip(){
-  if(state.balance>=1000){ state.balance-=1000; state.vip=true; showAchievement("💎 VIP aktivert! 2x gevinst!"); }
-  else showAchievement("❌ Ikke nok JohnCoins");
-  updateUI();
+  if(state.vip){ showAchievement('✅ VIP already active!'); return; }
+  if(state.balance<1000){ showAchievement("❌ Not enough JohnCoins"); return; }
+  state.balance-=1000; state.vip=true;
+  showAchievement("💎 VIP activated! 2x winnings!"); updateUI(); refreshShopBtns();
+  document.getElementById('shopBalanceDisplay').innerText = state.balance.toLocaleString();
 }
 function buyHints(){
-  if(state.balance>=300){ state.balance-=300; state.hints+=3; showAchievement("💡 +3 Hints kjøpt!"); }
-  else showAchievement("❌ Ikke nok JohnCoins");
-  updateUI();
+  if(state.balance<300){ showAchievement("❌ Not enough JohnCoins"); return; }
+  state.balance-=300; state.hints+=3; showAchievement("💡 +3 Hints purchased!"); updateUI();
+  document.getElementById('shopBalanceDisplay').innerText = state.balance.toLocaleString();
 }
 function buyLucky(){
-  if(state.balance>=700){ state.balance-=700; state.lucky=true; showAchievement("🍀 Lucky Card aktivert!"); }
-  else showAchievement("❌ Ikke nok JohnCoins");
-  updateUI();
+  if(state.balance<700){ showAchievement("❌ Not enough JohnCoins"); return; }
+  state.balance-=700; state.lucky=true; showAchievement("🍀 Lucky Card activated!"); updateUI();
+  document.getElementById('shopBalanceDisplay').innerText = state.balance.toLocaleString();
 }
+function buyXpBoost(){
+  if(state.balance<500){ showAchievement("❌ Not enough JohnCoins"); return; }
+  state.balance-=500; state.xpBoostRounds=(state.xpBoostRounds||0)+10; state._usedXpBoost=true;
+  showAchievement("⭐ XP Boost! 2x XP for 10 rounds!"); updateUI();
+  document.getElementById('shopBalanceDisplay').innerText = state.balance.toLocaleString();
+}
+
 function renderShopAvatars(){
   const grid=document.getElementById("shopAvatarGrid");
   if(!grid) return;
@@ -966,9 +1439,9 @@ function renderShopAvatars(){
     const owned = state.ownedAvatars.includes(av.id);
     return `<div class="shop-avatar-item">
       <span class="av-icon">${av.id}</span>
-      <div class="av-price">${owned?'✅ Eid':'🪙 '+av.price}</div>
-      <button class="action" style="padding:5px 10px;font-size:0.75em;margin-top:4px" onclick="buyAvatar('${av.id}')" ${owned?'disabled style="background:#444;cursor:default"':''}>
-        ${owned?'Eid':'Kjøp'}
+      <span class="av-price">${owned?'✅ Owned':'🪙 '+av.price}</span>
+      <button style="background:${owned?'#1a5c1a;color:#90ff90':'linear-gradient(135deg,#ffd700,#ff9500);color:#000'};font-weight:bold;padding:5px 8px;border-radius:7px;border:none;cursor:${owned?'default':'pointer'};font-size:0.72em" onclick="buyAvatar('${av.id}')" ${owned?'disabled':''}>
+        ${owned?'Owned':'Buy'}
       </button>
     </div>`;
   }).join('');
@@ -976,78 +1449,80 @@ function renderShopAvatars(){
 function buyAvatar(id){
   const av = SHOP_AVATARS.find(a=>a.id===id);
   if(!av) return;
-  if(state.ownedAvatars.includes(id)){ showAchievement("✅ Du eier allerede denne!"); return; }
-  if(state.balance<av.price){ showAchievement("❌ Ikke nok JohnCoins!"); return; }
+  if(state.ownedAvatars.includes(id)){ showAchievement("✅ Already owned!"); return; }
+  if(state.balance<av.price){ showAchievement("❌ Not enough JohnCoins!"); return; }
   state.balance-=av.price; state.ownedAvatars.push(id);
-  showAchievement("🧑 Avatar kjøpt: "+id);
+  showAchievement("🧑 Avatar purchased: "+id);
   updateUI(); renderShopAvatars();
+  document.getElementById('shopBalanceDisplay').innerText = state.balance.toLocaleString();
 }
 
-const SKIN_DEFS={
-  green:   {label:'🌿 Grønn',    bg:'radial-gradient(circle at top,#0f8f54 0%,#041b11 70%)',  price:0},
-  red:     {label:'🟥 Rød',      bg:'radial-gradient(circle at top,#8f1a0f 0%,#1b0400 70%)',  price:500},
-  blue:    {label:'🔵 Blå',      bg:'radial-gradient(circle at top,#0f4a8f 0%,#020d1b 70%)',  price:500},
-  purple:  {label:'🟣 Lilla',    bg:'radial-gradient(circle at top,#5a0f8f 0%,#0e0018 70%)',  price:600},
-  pink:    {label:'🩷 Rosa',     bg:'radial-gradient(circle at top,#8f0f6a 0%,#1b0015 70%)',  price:600},
-  yellow:  {label:'🟡 Gul',      bg:'radial-gradient(circle at top,#8f7c0f 0%,#1b1600 70%)',  price:600},
-  orange:  {label:'🟠 Oransje',  bg:'radial-gradient(circle at top,#8f4a0f 0%,#1b0800 70%)',  price:600},
-  black:   {label:'⬛ Svart',    bg:'radial-gradient(circle at top,#1a1a1a 0%,#000000 70%)',  price:1000},
-  white:   {label:'⬜ Hvit',     bg:'radial-gradient(circle at top,#e0e0e0 0%,#a0a0a0 70%)',  price:1000},
-  ocean:   {label:'🌊 Hav',      bg:'radial-gradient(circle at top,#0040a0 0%,#001030 70%)',  price:800},
-  sunset:  {label:'🌅 Solnedgang',bg:'radial-gradient(circle at top,#b05000 0%,#300010 70%)', price:800},
-  forest:  {label:'🌲 Skog',     bg:'radial-gradient(circle at top,#1a5a1a 0%,#051005 70%)',  price:700},
-  galaxy:  {label:'🌌 Galakse',  bg:'radial-gradient(circle at top,#200040 0%,#000010 70%)',  price:1200},
-  fire:    {label:'🔥 Ild',      bg:'radial-gradient(circle at top,#cc2200 0%,#200000 70%)',  price:1000},
-  ice:     {label:'🧊 Is',       bg:'radial-gradient(circle at top,#60c0e0 0%,#001020 70%)',  price:1000},
-  gold:    {label:'✨ Gull',     bg:'radial-gradient(circle at top,#a08000 0%,#201000 70%)',  price:2000},
-  neon:    {label:'💜 Neon',     bg:'radial-gradient(circle at top,#8000ff 0%,#100020 70%)',  price:1500},
-  cyber:   {label:'🤖 Cyber',    bg:'linear-gradient(180deg,#001a1a 0%,#00ff88 15%,#001a1a 30%,#001a1a 100%)',price:1800},
-};
-
+function renderShopSkinCategories(){
+  const tabs = document.getElementById('skinCategoryTabs');
+  if(!tabs) return;
+  tabs.innerHTML = Object.entries(SKIN_CATEGORIES).map(([key,cat])=>{
+    const count = key==='all'
+      ? Object.keys(SKIN_DEFS).filter(k=>SKIN_DEFS[k].price>0).length
+      : Object.keys(SKIN_DEFS).filter(k=>SKIN_DEFS[k].cat===key).length;
+    return `<div class="tourn-tab ${activeSkinCategory===key?'active':''}" onclick="setSkinCategory('${key}')">${cat.label} (${count})</div>`;
+  }).join('');
+}
+function setSkinCategory(cat){
+  activeSkinCategory = cat;
+  renderShopSkinCategories();
+  renderShopSkins();
+}
 function renderShopSkins(){
-  const list=document.getElementById("shopSkinList");
-  if(!list) return;
-  list.innerHTML = Object.entries(SKIN_DEFS).map(([key,def])=>{
-    if(def.price===0) return '';
-    const owned=state.ownedSkins.includes(key);
-    return `<div class="shop-item">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:40px;height:40px;border-radius:8px;background:${def.bg};border:1px solid rgba(255,255,255,0.2);flex-shrink:0"></div>
-        <div><h3>${def.label}</h3></div>
+  const grid = document.getElementById('shopSkinGrid');
+  if(!grid) return;
+  const entries = Object.entries(SKIN_DEFS).filter(([k,d])=>{
+    if(d.price===0) return false;
+    if(activeSkinCategory==='all') return true;
+    return d.cat === activeSkinCategory;
+  });
+  grid.innerHTML = entries.map(([key,def])=>{
+    const owned = state.ownedSkins.includes(key);
+    const active = state.activeSkin === key;
+    return `<div class="skin-card ${active?'owned-active':owned?'owned-inactive':''}">
+      <div class="skin-preview" style="background:${def.bg}"></div>
+      <h4>${def.label}</h4>
+      <div class="skin-price">${owned?(active?'✅ Active':'✅ Owned'):'🪙 '+def.price.toLocaleString()}</div>
+      <div style="margin-top:8px">
+        ${owned && !active
+          ? `<button style="background:linear-gradient(135deg,#228822,#44cc44);color:white;font-size:0.75em;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:bold" onclick="activateSkin('${key}')">Use Skin</button>`
+          : owned && active
+            ? `<button style="background:#333;color:#aaa;font-size:0.75em;padding:6px 12px;border-radius:8px;border:none;cursor:default;font-weight:bold" disabled>Active</button>`
+            : `<button style="background:linear-gradient(135deg,#ffd700,#ff9500);color:#000;font-size:0.75em;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:bold" onclick="buySkin('${key}')">Buy</button>`
+        }
       </div>
-      <button class="action" ${owned?'disabled style="background:#2a6a2a;cursor:default"':''} onclick="buySkin('${key}')">
-        ${owned?'✅ Eid':'🪙 '+def.price}
-      </button>
     </div>`;
   }).join('');
 }
-function refreshShopBtns(){
-  if(state.vip){
-    const vipBtn=document.getElementById("shopVipBtn");
-    if(vipBtn){ vipBtn.textContent="✅ Aktivert"; vipBtn.style.background="#2a6a2a"; vipBtn.onclick=null; }
-  }
-}
+
 function buySkin(key){
   const def=SKIN_DEFS[key];
   if(!def) return;
-  if(state.ownedSkins.includes(key)){ showAchievement("✅ Du eier allerede denne skin!"); return; }
-  if(state.balance<def.price){ showAchievement("❌ Ikke nok JohnCoins!"); return; }
+  if(state.ownedSkins.includes(key)){ showAchievement("✅ Already owned!"); return; }
+  if(state.balance<def.price){ showAchievement("❌ Not enough JohnCoins!"); return; }
   state.balance-=def.price; state.ownedSkins.push(key);
-  showAchievement("🎨 Kjøpt: "+def.label); updateUI(); renderShopSkins();
+  showAchievement("🎨 Purchased: "+def.label);
+  updateUI(); renderShopSkins();
+  document.getElementById('shopBalanceDisplay').innerText = state.balance.toLocaleString();
 }
+
 function openSkins(){ screen("skins"); renderSkinsInventory(); }
 function renderSkinsInventory(){
   const grid=document.getElementById("skinsInventory");
   if(!grid) return;
-  grid.innerHTML=Object.entries(SKIN_DEFS).map(([key,def])=>{
-    const owned=state.ownedSkins.includes(key);
+  const owned = Object.entries(SKIN_DEFS).filter(([k])=>state.ownedSkins.includes(k));
+  if(owned.length===0){ grid.innerHTML='<p style="color:#888;text-align:center">No skins yet! Visit the Shop.</p>'; return; }
+  grid.innerHTML=owned.map(([key,def])=>{
     const active=state.activeSkin===key;
-    if(!owned) return '';
     return `<div class="inventory-item" style="border-color:${active?'gold':'transparent'}">
       <h3 style="font-size:0.9em">${def.label}</h3>
       <div style="width:100%;height:30px;border-radius:6px;margin:8px 0;background:${def.bg};border:1px solid rgba(255,255,255,0.2)"></div>
-      ${active?`<button class="action" style="background:#555;cursor:default;width:100%">✅ Aktiv</button>`
-        :`<button class="action" style="width:100%" onclick="activateSkin('${key}')">Bruk</button>`}
+      ${active?`<button class="action" style="background:#555;cursor:default;width:100%;margin-top:6px">✅ Active</button>`
+        :`<button class="action" style="width:100%;margin-top:6px" onclick="activateSkin('${key}')">Use</button>`}
     </div>`;
   }).join("");
 }
@@ -1055,8 +1530,9 @@ function activateSkin(key){
   if(!state.ownedSkins.includes(key)) return;
   state.activeSkin=key;
   document.body.style.background=SKIN_DEFS[key].bg;
-  showAchievement("🎨 Skin aktivert: "+SKIN_DEFS[key].label);
+  showAchievement("🎨 Skin activated: "+SKIN_DEFS[key].label);
   renderSkinsInventory();
+  renderShopSkins();
 }
 
 // ══════════════════════════════════════════════
@@ -1113,8 +1589,8 @@ function bjHit(){
   state.gamesPlayed++;
   if(total>21){
     bjState.done=true; state.losses++; state.balance-=bjState.bet;
-    if(state.lucky){ state.balance+=bjState.bet; state.lucky=false; state._luckySaved=true; showAchievement("🍀 Lucky Card reddet deg!"); }
-    renderBlackjack(true,`<span style="color:#ff6060">💥 Bust! Sum: ${total}. Tapte ${bjState.bet} JohnCoins.</span>`);
+    if(state.lucky){ state.balance+=bjState.bet; state.lucky=false; state._luckySaved=true; showAchievement("🍀 Lucky Card saved you!"); }
+    renderBlackjack(true,`<span style="color:#ff6060">💥 Bust! Sum: ${total}. Lost ${bjState.bet} JohnCoins.</span>`);
   } else if(total===21){ bjStand(); }
   else { renderBlackjack(); }
   updateUI();
@@ -1127,21 +1603,21 @@ function bjStand(){
   let msg;
   if(d>21||p>d){
     state.wins++; const gain=state.vip?bjState.bet*2:bjState.bet;
-    state.balance+=gain; state.xp+=30;
-    msg=`<span style="color:limegreen">🎉 Du vinner! Du: ${p}, Dealer: ${d>21?"bust":d}. +${gain} JohnCoins</span>`;
+    state.balance+=gain; gainXP(30);
+    msg=`<span style="color:limegreen">🎉 You win! You: ${p}, Dealer: ${d>21?"bust":d}. +${gain} JohnCoins</span>`;
   } else if(p===d){
-    msg=`<span style="color:gold">🤝 Uavgjort! Begge: ${p}.</span>`;
+    gainXP(10);
+    msg=`<span style="color:gold">🤝 Draw! Both: ${p}.</span>`;
   } else {
     state.losses++; state.balance-=bjState.bet;
-    if(state.lucky){ state.balance+=bjState.bet; state.lucky=false; state._luckySaved=true; showAchievement("🍀 Lucky Card reddet deg!"); }
-    msg=`<span style="color:#ff6060">😔 Dealer vinner. Du: ${p}, Dealer: ${d}. -${bjState.bet} JohnCoins</span>`;
+    if(state.lucky){ state.balance+=bjState.bet; state.lucky=false; state._luckySaved=true; showAchievement("🍀 Lucky Card saved you!"); }
+    msg=`<span style="color:#ff6060">😔 Dealer wins. You: ${p}, Dealer: ${d}. -${bjState.bet} JohnCoins</span>`;
   }
-  if(state.xp>=state.level*100){ state.level++; showAchievement("⭐ LEVEL UP! Level "+state.level); }
   renderBlackjack(true,msg); updateUI();
 }
 function bjDouble(){
   if(bjState.done||bjState.player.length!==2) return;
-  if(bjState.bet*2>state.balance){ showAchievement("❌ Ikke nok JohnCoins!"); return; }
+  if(bjState.bet*2>state.balance){ showAchievement("❌ Not enough JohnCoins!"); return; }
   bjState.bet*=2; state._bigBet=true; bjHit(); if(!bjState.done) bjStand();
 }
 
@@ -1179,14 +1655,14 @@ function openSlots(){
 function doSpin(){
   if(slotSpinning) return;
   const bet=parseInt(document.getElementById('slotBet').value)||100;
-  if(bet<50){ showAchievement('⚠️ Minste innsats: 50'); return; }
-  if(bet>state.balance){ showAchievement('❌ Ikke nok JohnCoins'); return; }
+  if(bet<50){ showAchievement('⚠️ Min bet: 50'); return; }
+  if(bet>state.balance){ showAchievement('❌ Not enough JohnCoins'); return; }
   if(bet>=1000) state._bigBet=true;
   state.balance-=bet; state.slotSpins++; state.gamesPlayed++;
   updateUI();
   slotSpinning=true;
   document.getElementById('spinBtn').disabled=true;
-  document.getElementById('slotsResult').innerText='🎰 Snurrer...';
+  document.getElementById('slotsResult').innerText='🎰 Spinning...';
   document.getElementById('slotsSymDisplay').innerText='';
   [0,1,2].forEach(i=>document.getElementById('reel'+i).classList.remove('reel-win'));
   const results=[weightedRandom(),weightedRandom(),weightedRandom()];
@@ -1194,9 +1670,8 @@ function doSpin(){
   Promise.all(promises).then(()=>{
     slotSpinning=false;
     document.getElementById('spinBtn').disabled=false;
-    // Show symbols clearly
     document.getElementById('slotsSymDisplay').innerHTML =
-      results.map(i=>`<span style="display:inline-block;animation:bounce 0.4s ease-in-out ${results.indexOf(i)*0.1}s">${SLOT_SYMBOLS[i]}</span>`).join('');
+      results.map(i=>`<span>${SLOT_SYMBOLS[i]}</span>`).join('');
     evaluateSlots(results,bet);
   });
 }
@@ -1232,14 +1707,16 @@ function evaluateSlots(results,bet){
     const gain=bet*mult; state.balance+=gain; state.wins++;
     if(state.vip) state.balance+=gain;
     winReels=[0,1,2];
+    gainXP(50);
     if(syms[0]==='7️⃣'){ state._slotJackpot=true; msg=`<span style="color:#ffd700;font-size:1.3em">🎆 JACKPOT! +${gain} JohnCoins!</span>`; showAchievement("🎆 JACKPOT! +"+gain); }
     else { msg=`<span style="color:limegreen">🎉 3 of a kind! +${gain} JohnCoins (${mult}x)</span>`; showAchievement("🎰 Slots: +"+gain+"!"); }
   } else if(syms[0]===syms[1]||syms[1]===syms[2]||syms[0]===syms[2]){
     const gain=Math.floor(bet*1.5); state.balance+=gain; state.wins++;
     if(syms[0]===syms[1]) winReels=[0,1]; else if(syms[1]===syms[2]) winReels=[1,2]; else winReels=[0,2];
+    gainXP(15);
     msg=`<span style="color:#90ff90">✨ 2 matching! +${gain} JohnCoins</span>`;
   } else {
-    state.losses++; msg=`<span style="color:#ff6060">💀 Ingen match — tapte ${bet} JohnCoins</span>`;
+    state.losses++; msg=`<span style="color:#ff6060">💀 No match — lost ${bet} JohnCoins</span>`;
   }
   document.getElementById('slotsResult').innerHTML=msg;
   winReels.forEach(i=>document.getElementById('reel'+i).classList.add('reel-win'));
@@ -1247,7 +1724,7 @@ function evaluateSlots(results,bet){
 }
 
 // ══════════════════════════════════════════════
-//  TRUCK BETTING
+//  TRUCK BETTING — Fixed hints
 // ══════════════════════════════════════════════
 const TRUCKS=[
   {name:"Big Red",      emoji:"🚛", color:"#cc2200"},
@@ -1257,16 +1734,29 @@ const TRUCKS=[
   {name:"Night Rider",  emoji:"🚐", color:"#553399"},
 ];
 let truckState={};
+// Store the pre-race speed values so hint can be accurate
+let truckHintSpeeds = null;
 
 function openTruckBetting(){
   screen('truckBetting');
   truckState={ racing:false, selectedTruck:null, positions:TRUCKS.map(()=>0), done:false };
+  truckHintSpeeds = null;
   renderTruckTrack();
   document.getElementById('truckRaceResult').innerHTML='';
   document.getElementById('raceProgressFill').style.width='0%';
   document.getElementById('truckStartBtn').disabled=false;
-  document.getElementById('truckHintInfo').innerText=`💡 Hints: ${state.hints} — bruk hint for å se favoritt`;
-  document.getElementById('truckBetInfo').innerText='Velg en lastebil å satse på!';
+  updateHintPanel();
+  document.getElementById('truckBetInfo').innerText='Choose a truck to bet on!';
+  // Reset hint result display
+  const hr = document.getElementById('hintResultTruck');
+  if(hr){ hr.style.display='none'; hr.innerText=''; }
+}
+
+function updateHintPanel(){
+  const countEl = document.getElementById('hintCountTruck');
+  const btn = document.getElementById('hintUseBtnTruck');
+  if(countEl) countEl.innerText = state.hints;
+  if(btn) btn.disabled = state.hints <= 0;
 }
 
 function renderTruckTrack(){
@@ -1283,7 +1773,7 @@ function renderTruckTrack(){
       </div>
       <div class="truck-odds">${odds[i]}x</div>
       <button class="bet-truck-btn ${sel?'selected':''}" onclick="selectTruck(${i})">
-        ${sel?'✅ Valgt':'Velg'}
+        ${sel?'✅ Chosen':'Pick'}
       </button>
     </div>`;
   }).join('');
@@ -1294,38 +1784,69 @@ function selectTruck(i){
   if(truckState.racing) return;
   truckState.selectedTruck=i;
   renderTruckTrack();
-  document.getElementById('truckBetInfo').innerText=`Valgt: ${TRUCKS[i].emoji} ${TRUCKS[i].name} (${truckState.odds[i]}x)`;
+  document.getElementById('truckBetInfo').innerText=`Chosen: ${TRUCKS[i].emoji} ${TRUCKS[i].name} (${truckState.odds[i]}x odds)`;
+}
+
+function useHintTruck(){
+  if(state.hints <= 0){ showAchievement('❌ No hints left! Buy more in the Shop.'); return; }
+  if(truckState.racing){ showAchievement('⚠️ Race already started!'); return; }
+
+  state.hints--;
+  updateUI();
+  updateHintPanel();
+
+  // Generate pre-race speeds now (locked in) so the hint is actually accurate
+  truckHintSpeeds = TRUCKS.map(()=>Math.random()*1.2+0.5);
+  const fastest = truckHintSpeeds.indexOf(Math.max(...truckHintSpeeds));
+  const slowest = truckHintSpeeds.indexOf(Math.min(...truckHintSpeeds));
+
+  // Give a realistic hint based on actual speeds
+  const hintMessages = [
+    `🔍 Insider info: ${TRUCKS[fastest].emoji} ${TRUCKS[fastest].name} looks strongest today!`,
+    `🔧 Pit crew says: ${TRUCKS[fastest].emoji} ${TRUCKS[fastest].name} has the best engine warm-up.`,
+    `📡 Scanner says: ${TRUCKS[slowest].emoji} ${TRUCKS[slowest].name} is running slow today — avoid!`,
+    `💨 Wind analysis: ${TRUCKS[fastest].emoji} ${TRUCKS[fastest].name} has the best aerodynamics today!`,
+  ];
+  const hint = hintMessages[Math.floor(Math.random()*hintMessages.length)];
+
+  const hr = document.getElementById('hintResultTruck');
+  if(hr){ hr.innerText = hint; hr.style.display='block'; }
+  showAchievement('💡 Hint used! ' + TRUCKS[fastest].emoji + ' looks fast!');
+
+  // Auto-select the fastest truck
+  if(truckState.selectedTruck === null){
+    selectTruck(fastest);
+  }
 }
 
 function startRace(){
   if(truckState.racing) return;
-  if(truckState.selectedTruck===null){ showAchievement('⚠️ Velg en lastebil først!'); return; }
+  if(truckState.selectedTruck===null){ showAchievement('⚠️ Pick a truck first!'); return; }
   const bet=parseInt(document.getElementById('truckBetAmt').value)||100;
-  if(bet<50){ showAchievement('⚠️ Minste innsats: 50'); return; }
-  if(bet>state.balance){ showAchievement('❌ Ikke nok JohnCoins'); return; }
+  if(bet<50){ showAchievement('⚠️ Min bet: 50'); return; }
+  if(bet>state.balance){ showAchievement('❌ Not enough JohnCoins'); return; }
   if(bet>=1000) state._bigBet=true;
   state.balance-=bet; state.truckRaces++; state.gamesPlayed++;
   updateUI();
   truckState.racing=true; truckState.positions=TRUCKS.map(()=>0);
-  truckState.speeds=TRUCKS.map(()=>Math.random()*1.2+0.5);
+  // Use hint speeds if a hint was used, otherwise random
+  truckState.speeds = truckHintSpeeds ? [...truckHintSpeeds] : TRUCKS.map(()=>Math.random()*1.2+0.5);
   truckState.bet=bet; truckState.done=false;
   document.getElementById('truckStartBtn').disabled=true;
   document.getElementById('truckRaceResult').innerHTML='🏁 Race started!';
   document.getElementById('raceProgressFill').style.width='0%';
+  document.getElementById('hintUseBtnTruck').disabled=true;
 
   let frame=0, totalFrames=200, winner=-1;
   const interval=setInterval(()=>{
     frame++;
-    // Randomize speeds slightly each frame
     truckState.speeds=truckState.speeds.map(s=>Math.max(0.3,Math.min(2.5,s+(Math.random()-0.48)*0.15)));
     truckState.positions=truckState.positions.map((p,i)=>Math.min(98,p+truckState.speeds[i]*0.5));
-    // Update truck icons
     TRUCKS.forEach((_,i)=>{
       const el=document.getElementById('truck_'+i);
       if(el) el.style.left=truckState.positions[i]+'%';
     });
     document.getElementById('raceProgressFill').style.width=(frame/totalFrames*100)+'%';
-    // Check winner
     const maxPos=Math.max(...truckState.positions);
     if(maxPos>=98&&winner===-1){ winner=truckState.positions.indexOf(maxPos); }
     if(frame>=totalFrames){
@@ -1338,6 +1859,7 @@ function startRace(){
 
 function finishRace(winner,bet){
   truckState.racing=false; truckState.done=true;
+  truckHintSpeeds=null; // Reset for next race
   const winEl=document.getElementById('truck_'+winner);
   if(winEl) winEl.classList.add('winner-bounce');
   document.getElementById('raceProgressFill').style.width='100%';
@@ -1345,23 +1867,16 @@ function finishRace(winner,bet){
   if(winner===truckState.selectedTruck){
     const gain=Math.floor(bet*truckState.odds[winner]);
     state.balance+=gain; state.wins++; state._truckWins++;
-    resEl.innerHTML=`<span style="color:limegreen">🏆 ${TRUCKS[winner].emoji} ${TRUCKS[winner].name} vinner! Du vant ${gain} JohnCoins!</span>`;
-    showAchievement("🚛 Truck vant! +"+gain);
+    gainXP(40);
+    resEl.innerHTML=`<span style="color:limegreen">🏆 ${TRUCKS[winner].emoji} ${TRUCKS[winner].name} wins! You won ${gain} JohnCoins!</span>`;
+    showAchievement("🚛 Truck won! +"+gain);
   } else {
     state.losses++;
-    if(state.lucky){ state.balance+=bet; state.lucky=false; state._luckySaved=true; showAchievement("🍀 Lucky Card reddet deg!"); }
-    resEl.innerHTML=`<span style="color:#ff6060">💀 ${TRUCKS[winner].emoji} ${TRUCKS[winner].name} vant — du tapte ${bet} JohnCoins</span>`;
+    if(state.lucky){ state.balance+=bet; state.lucky=false; state._luckySaved=true; showAchievement("🍀 Lucky Card saved you!"); }
+    resEl.innerHTML=`<span style="color:#ff6060">💀 ${TRUCKS[winner].emoji} ${TRUCKS[winner].name} won — you lost ${bet} JohnCoins</span>`;
   }
   document.getElementById('truckStartBtn').disabled=false;
-  updateUI();
-}
-
-function useHintTruck(){
-  if(state.hints<=0){ showAchievement('❌ Ingen hints igjen! Kjøp i Shop.'); return; }
-  state.hints--;
-  // Reveal which truck has best odds (lowest index in speeds if race not started = random favorite)
-  const fav=Math.floor(Math.random()*TRUCKS.length);
-  showAchievement(`💡 Hint: ${TRUCKS[fav].emoji} ${TRUCKS[fav].name} ser sterk ut!`);
+  document.getElementById('hintUseBtnTruck').disabled=state.hints<=0;
   updateUI();
 }
 
@@ -1413,7 +1928,7 @@ function openTexasHoldem(){
 }
 function newPokerHand(){
   const ante=100;
-  if(state.balance<ante){ showAchievement('❌ Ikke nok JohnCoins (trenger 100)'); return; }
+  if(state.balance<ante){ showAchievement('❌ Need 100 JohnCoins (ante)'); return; }
   const deck=buildDeck();
   pk={ deck, player:[deck.pop(),deck.pop()], dealer:[deck.pop(),deck.pop()], community:[], pot:0, playerBet:0, dealerBet:0, dealerChips:parseInt(document.getElementById('dealerChips').innerText)||2000, blind:ante, street:'preflop', playerFolded:false, raiseAmount:0, done:false };
   state.balance-=ante; pk.pot+=ante; pk.playerBet=ante;
@@ -1429,7 +1944,7 @@ function renderPoker(){
   const ph=document.getElementById('playerHand'); ph.innerHTML='';
   pk.player.forEach(c=>{ const d=document.createElement('div'); d.className='pcard'; d.style.color=cardColor(c); d.textContent=cardLabel(c); ph.appendChild(d); });
   const dh=document.getElementById('dealerHand'); dh.innerHTML='';
-  pk.dealer.forEach((c,i)=>{
+  pk.dealer.forEach((c)=>{
     const d=document.createElement('div');
     if(pk.done||pk.street==='showdown'){ d.className='pcard'; d.style.color=cardColor(c); d.textContent=cardLabel(c); }
     else { d.className='pcard face-down'; d.textContent='🂠'; }
@@ -1440,14 +1955,14 @@ function renderPoker(){
   document.getElementById('raiseDisplay').innerText=pk.raiseAmount>0?`Raise: ${pk.raiseAmount} JohnCoins`:'';
   if(pk.community.length>=3&&!pk.done){
     const hand=evaluateHand([...pk.player,...pk.community]);
-    document.getElementById('pokerInfo').innerText=`🃏 Din hånd: ${hand.name}`;
+    document.getElementById('pokerInfo').innerText=`🃏 Your hand: ${hand.name}`;
   }
   renderPokerActions();
   document.getElementById('chipRow').style.display=(pk.street&&!pk.done)?'flex':'none';
 }
 function renderPokerActions(){
   const acts=document.getElementById('pokerActions');
-  if(pk.done){ acts.innerHTML=`<button class="pbtn pbtn-new" onclick="newPokerHand()">🃏 Ny hånd</button>`; return; }
+  if(pk.done){ acts.innerHTML=`<button class="pbtn pbtn-new" onclick="newPokerHand()">🃏 New Hand</button>`; return; }
   const callAmt=pk.dealerBet-pk.playerBet;
   const canCheck=callAmt<=0;
   acts.innerHTML=`
@@ -1459,23 +1974,23 @@ function renderPokerActions(){
 }
 function addRaise(n){ pk.raiseAmount=(pk.raiseAmount||0)+n; document.getElementById('raiseDisplay').innerText=`Raise: ${pk.raiseAmount} JohnCoins`; }
 function clearRaise(){ pk.raiseAmount=0; document.getElementById('raiseDisplay').innerText=''; }
-function pokerFold(){ pk.done=true; pk.playerFolded=true; pk.dealerChips+=pk.pot; document.getElementById('pokerInfo').innerText=`😔 Du foldet. Dealer vinner potten (${pk.pot}).`; state.losses++; renderPoker(); updateUI(); }
+function pokerFold(){ pk.done=true; pk.playerFolded=true; pk.dealerChips+=pk.pot; document.getElementById('pokerInfo').innerText=`😔 You folded. Dealer takes the pot (${pk.pot}).`; state.losses++; renderPoker(); updateUI(); }
 function pokerCall(){
   const callAmt=pk.dealerBet-pk.playerBet;
-  if(callAmt>state.balance){ showAchievement('❌ Ikke nok JohnCoins!'); return; }
+  if(callAmt>state.balance){ showAchievement('❌ Not enough JohnCoins!'); return; }
   state.balance-=callAmt; pk.pot+=callAmt; pk.playerBet+=callAmt; advanceStreet();
 }
 function pokerCheck(){
-  if(Math.random()<0.4&&pk.dealerChips>=50){ const r=50; pk.dealerBet+=r; pk.dealerChips-=r; pk.pot+=r; document.getElementById('pokerInfo').innerText=`🤖 Dealer bet ${r} — kall eller fold!`; renderPokerActions(); return; }
+  if(Math.random()<0.4&&pk.dealerChips>=50){ const r=50; pk.dealerBet+=r; pk.dealerChips-=r; pk.pot+=r; document.getElementById('pokerInfo').innerText=`🤖 Dealer bets ${r} — call or fold!`; renderPokerActions(); return; }
   advanceStreet();
 }
 function pokerRaise(){
   const raise=pk.raiseAmount||100;
-  if(raise>state.balance){ showAchievement('❌ Ikke nok JohnCoins!'); return; }
+  if(raise>state.balance){ showAchievement('❌ Not enough JohnCoins!'); return; }
   state.balance-=raise; pk.pot+=raise; pk.playerBet+=raise; pk.raiseAmount=0;
   document.getElementById('raiseDisplay').innerText='';
-  if(Math.random()<0.6&&pk.dealerChips>=raise){ pk.dealerChips-=raise; pk.pot+=raise; pk.dealerBet+=raise; document.getElementById('pokerInfo').innerText='🤖 Dealer caller...'; }
-  else { const gain=pk.pot; state.balance+=gain; state.wins++; state._pokerWins++; pk.done=true; showAchievement('♠️ Poker: +'+gain+'!'); updateUI(); renderPoker(); return; }
+  if(Math.random()<0.6&&pk.dealerChips>=raise){ pk.dealerChips-=raise; pk.pot+=raise; pk.dealerBet+=raise; document.getElementById('pokerInfo').innerText='🤖 Dealer calls...'; }
+  else { const gain=pk.pot; state.balance+=gain; state.wins++; state._pokerWins++; pk.done=true; gainXP(35); showAchievement('♠️ Poker: +'+gain+'!'); updateUI(); renderPoker(); return; }
   advanceStreet();
 }
 function pokerAllIn(){
@@ -1496,16 +2011,16 @@ function pokerShowdown(){
   const pHand=evaluateHand([...pk.player,...pk.community]);
   const dHand=evaluateHand([...pk.dealer,...pk.community]);
   let msg;
-  if(pHand.value>dHand.value){ const gain=state.vip?pk.pot*2:pk.pot; state.balance+=gain; state.wins++; state._pokerWins++; msg=`<span style="color:limegreen">🎉 Du vinner! ${pHand.name} vs ${dHand.name}. +${gain}!</span>`; showAchievement('♠️ Poker: +'+gain+'!'); }
-  else if(pHand.value===dHand.value){ state.balance+=Math.floor(pk.pot/2); msg=`<span style="color:gold">🤝 Uavgjort! ${pHand.name}.</span>`; }
-  else { pk.dealerChips+=pk.pot; state.losses++; msg=`<span style="color:#ff6060">😔 Dealer: ${dHand.name} vs din ${pHand.name}.</span>`; }
+  if(pHand.value>dHand.value){ const gain=state.vip?pk.pot*2:pk.pot; state.balance+=gain; state.wins++; state._pokerWins++; gainXP(40); msg=`<span style="color:limegreen">🎉 You win! ${pHand.name} vs ${dHand.name}. +${gain}!</span>`; showAchievement('♠️ Poker win: +'+gain+'!'); }
+  else if(pHand.value===dHand.value){ state.balance+=Math.floor(pk.pot/2); gainXP(10); msg=`<span style="color:gold">🤝 Draw! ${pHand.name}.</span>`; }
+  else { pk.dealerChips+=pk.pot; state.losses++; msg=`<span style="color:#ff6060">😔 Dealer: ${dHand.name} vs your ${pHand.name}.</span>`; }
   document.getElementById('pokerInfo').innerHTML=msg;
   setTimeout(()=>document.querySelectorAll('#dealerHand .pcard').forEach(c=>c.classList.add('highlight')),300);
   renderPoker(); updateUI();
 }
 
 // ══════════════════════════════════════════════
-//  ROULETTE  — FIXED: wheel stays after spin
+//  ROULETTE
 // ══════════════════════════════════════════════
 const RSLOTS=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
 const RSLOT_COLOR=n=>{ if(n===0) return 'green'; return [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n)?'red':'black'; };
@@ -1523,7 +2038,6 @@ const BET_TYPES={
 };
 
 let rCurrentBet=null, rSpinning=false;
-// Persistent wheel state — only resets when navigating away, not after spin
 let rWheelAngle=0, rBallAngle=0, rBallRadius=0;
 let rCanvas=null, rCtx=null, rRAF=null, rSpinPhase='idle';
 let rResultSlot=-1;
@@ -1554,9 +2068,9 @@ function setRBet(key){
   const btn=document.getElementById(key.startsWith('num_')?'rb_'+key:'rb_'+key);
   if(btn) btn.classList.add('sel');
   let label;
-  if(key.startsWith('num_')){ const n=parseInt(key.split('_')[1]); label=`Nummer ${n} (36x)`; }
+  if(key.startsWith('num_')){ const n=parseInt(key.split('_')[1]); label=`Number ${n} (36x)`; }
   else { const bt=BET_TYPES[key]; label=`${bt.label} (${bt.mult}x)`; }
-  document.getElementById('betDisplay').innerText=`Valgt: ${label}`;
+  document.getElementById('betDisplay').innerText=`Selected: ${label}`;
 }
 function openRealRoulette(){
   screen('realRoulette');
@@ -1569,15 +2083,15 @@ function openRealRoulette(){
 }
 function spinWheel(){
   if(rSpinning) return;
-  if(!rCurrentBet){ showAchievement('⚠️ Velg et felt først!'); return; }
+  if(!rCurrentBet){ showAchievement('⚠️ Choose a bet first!'); return; }
   const betAmount=parseInt(document.getElementById('rouletteBet').value)||100;
-  if(betAmount<50){ showAchievement('⚠️ Minste innsats: 50'); return; }
-  if(betAmount>state.balance){ showAchievement('❌ Ikke nok JohnCoins'); return; }
+  if(betAmount<50){ showAchievement('⚠️ Min bet: 50'); return; }
+  if(betAmount>state.balance){ showAchievement('❌ Not enough JohnCoins'); return; }
   if(betAmount>=1000) state._bigBet=true;
   if(!rCanvas) initRouletteCanvas();
   state.balance-=betAmount; updateUI();
   rSpinning=true; rSpinPhase='spinning';
-  document.getElementById('rouletteResult').innerText='🎰 Snurrer...';
+  document.getElementById('rouletteResult').innerText='🎰 Spinning...';
   rResultSlot=RSLOTS[Math.floor(Math.random()*RSLOTS.length)];
   const resultIdx=RSLOTS.indexOf(rResultSlot);
   const sliceAngle=(Math.PI*2)/RSLOTS.length;
@@ -1585,7 +2099,6 @@ function spinWheel(){
   rBallRadius=rCanvas._size/2*0.84;
   const totalSpin=5.5, totalFrames=Math.round(totalSpin*60);
   let frameCount=0;
-  // Target final wheel angle
   const finalWheelAngle=-Math.PI/2-resultIdx*sliceAngle-sliceAngle/2;
   if(rRAF) cancelAnimationFrame(rRAF);
   function animate(){
@@ -1613,23 +2126,21 @@ function spinWheel(){
     drawRoulette();
     if(frameCount<totalFrames){ rRAF=requestAnimationFrame(animate); }
     else{
-      // Lock wheel exactly and stop — DO NOT reset
       rWheelAngle=finalWheelAngle;
       rBallAngle=finalWheelAngle+resultIdx*sliceAngle;
       rBallRadius=rCanvas._size/2*0.72*0.62;
       rSpinPhase='done';
-      drawRoulette(); // final draw, stays
+      drawRoulette();
       rSpinning=false;
       state.rouletteSpins++;
-      // Evaluate
       const n=rResultSlot, col=RSLOT_COLOR(n);
       const colEmoji=col==='red'?'🔴':col==='green'?'💚':'⚫';
       let won=false, mult=0;
       if(rCurrentBet.startsWith('num_')){ const p=parseInt(rCurrentBet.split('_')[1]); won=p===n; mult=36; }
       else { const bt=BET_TYPES[rCurrentBet]; won=bt.test(n); mult=bt.mult; }
       const resEl=document.getElementById('rouletteResult');
-      if(won){ const gain=betAmount*mult; state.balance+=gain; resEl.innerHTML=`<span style="color:limegreen">${colEmoji} ${n} — 🎉 Vant! +${gain} JohnCoins (${mult}x)</span>`; showAchievement(`🎉 Roulette: +${gain}!`); }
-      else { resEl.innerHTML=`<span style="color:#ff6060">${colEmoji} ${n} — Tapte ${betAmount} JohnCoins 💀</span>`; showAchievement(`💀 Roulette: -${betAmount}`); }
+      if(won){ const gain=betAmount*mult; state.balance+=gain; gainXP(25); resEl.innerHTML=`<span style="color:limegreen">${colEmoji} ${n} — 🎉 Won! +${gain} JohnCoins (${mult}x)</span>`; showAchievement(`🎉 Roulette: +${gain}!`); }
+      else { resEl.innerHTML=`<span style="color:#ff6060">${colEmoji} ${n} — Lost ${betAmount} JohnCoins 💀</span>`; showAchievement(`💀 Roulette: -${betAmount}`); }
       updateUI();
     }
   }
@@ -1725,33 +2236,30 @@ function renderTournContent(){
     </div>
   `).join('');
 }
-
 function playTournament(gameId, diffId){
   const diff=TOURN_DIFFS.find(d=>d.id===diffId);
   if(!diff) return;
   if(state.balance<diff.entryFee){ showAchievement(`❌ Need ${diff.entryFee} JohnCoins to enter!`); return; }
   state.balance-=diff.entryFee; updateUI();
   const progEl=document.getElementById('tp_'+diffId);
-  if(progEl) progEl.innerHTML='<p style="color:#aaa;animation:pulse 0.5s infinite alternate">⏳ Playing tournament...</p>';
-
-  // Simulate rounds
-  let playerScore=0, roundsPlayed=0, totalRounds=5;
-  for(let r=0;r<totalRounds;r++){
+  if(progEl) progEl.innerHTML='<p style="color:#aaa">⏳ Playing tournament...</p>';
+  let playerScore=0;
+  for(let r=0;r<5;r++){
     const playerRoll=Math.random();
     const botRoll=Math.random()*diff.botStrength + diff.botStrength*0.3;
     if(playerRoll > botRoll) playerScore++;
   }
-
-  const won = playerScore >= Math.ceil(totalRounds/2);
+  const won = playerScore >= 3;
   setTimeout(()=>{
     if(won){
       state.balance+=diff.prize; state.wins++; state.tourneysWon++; state._tournamentsWon++;
-      if(progEl) progEl.innerHTML=`<p style="color:limegreen;font-weight:bold">🏆 YOU WON! ${playerScore}/${totalRounds} rounds won. +${diff.prize.toLocaleString()} JohnCoins!</p>`;
+      gainXP(100);
+      if(progEl) progEl.innerHTML=`<p style="color:limegreen;font-weight:bold">🏆 YOU WON! ${playerScore}/5 rounds. +${diff.prize.toLocaleString()} JohnCoins!</p>`;
       showAchievement(`🏆 Tournament won! +${diff.prize}`);
     } else {
       state.losses++;
-      if(progEl) progEl.innerHTML=`<p style="color:#ff6060;font-weight:bold">😔 Lost! ${playerScore}/${totalRounds} rounds won. Lost entry fee.</p>`;
-      showAchievement(`😔 Tournament lost — ${playerScore}/${totalRounds} rounds`);
+      if(progEl) progEl.innerHTML=`<p style="color:#ff6060;font-weight:bold">😔 Lost! ${playerScore}/5 rounds won.</p>`;
+      showAchievement(`😔 Tournament lost — ${playerScore}/5 rounds`);
     }
     updateUI();
   }, 1500);
@@ -1801,18 +2309,20 @@ function openAchievements(){
 }
 function openCases(){ screen("cases"); }
 function openCase(){
-  if(state.balance<500){ showAchievement("❌ Ikke nok JohnCoins"); return; }
+  if(state.balance<500){ showAchievement("❌ Not enough JohnCoins"); return; }
   state.balance-=500; state.casesOpened++;
-  const rewards=["💎 Diamond Skin","👑 Royal Avatar","🔥 XP Boost +100","💰 2000 JohnCoins","🍀 Lucky Card","💎 VIP Access","🪙 500 JohnCoins","⭐ XP +200","🤖 CyberBot Avatar"];
+  const rewards=["💎 Diamond Skin","👑 Royal Avatar","🔥 XP Boost +100","💰 2000 JohnCoins","🍀 Lucky Card","💎 VIP Access","🪙 500 JohnCoins","⭐ XP +200","🤖 CyberBot Avatar","🌌 Galaxy Skin","🎆 Firework +300 JohnCoins"];
   const reward=rewards[Math.floor(Math.random()*rewards.length)];
   document.getElementById("caseItem").innerText=reward;
   if(reward.includes("2000")) state.balance+=2000;
   if(reward.includes("500 JohnCoins")) state.balance+=500;
-  if(reward.includes("XP +100")) state.xp+=100;
-  if(reward.includes("XP +200")) state.xp+=200;
+  if(reward.includes("300 JohnCoins")) state.balance+=300;
+  if(reward.includes("XP +100")) gainXP(100);
+  if(reward.includes("XP +200")) gainXP(200);
   if(reward.includes("Lucky")) state.lucky=true;
   if(reward.includes("VIP")) state.vip=true;
-  showAchievement("🎁 Du fikk: "+reward);
+  if(reward.includes("Galaxy Skin") && !state.ownedSkins.includes('galaxy')) state.ownedSkins.push('galaxy');
+  showAchievement("🎁 You got: "+reward);
   updateUI();
 }
 
@@ -1845,9 +2355,11 @@ drawParticles();
 // ══════════════════════════════════════════════
 updateUI();
 document.body.style.background=SKIN_DEFS[state.activeSkin].bg;
-// Add hint button to truck betting page
-document.getElementById('truckHintInfo').onclick=useHintTruck;
-document.getElementById('truckHintInfo').style.cursor='pointer';
+
+// Enter key on login fields
+document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('regPass2').addEventListener('keydown', e=>{ if(e.key==='Enter') doRegister(); });
 </script>
 </body>
 </html>
