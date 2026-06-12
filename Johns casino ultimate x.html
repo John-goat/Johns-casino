@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John's Casino Ultimate X</title>
+<style>
+:root{
+  --gold:#ffd700;
+  --green:#0b5d3b;
+  --dark:#031c12;
+  --red:#ff4d4d;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{
+  font-family:Segoe UI,sans-serif;
+  background: radial-gradient(circle at top,#0f8f54 0%,#041b11 70%);
+  color:white;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+#particles{ position:fixed; inset:0; pointer-events:none; z-index:0; }
+.casino-lights{
+  position:fixed; top:0; left:0; width:100%; height:6px;
+  background:linear-gradient(90deg,red,orange,yellow,lime,cyan,blue,magenta,red);
+  background-size:400%;
+  animation:lights 8s linear infinite;
+  z-index:9999;
+}
+@keyframes lights{ from{background-position:0%} to{background-position:400%} }
+header{
+  background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(10px);
+  border-bottom:3px solid var(--gold);
+  text-align:center;
+  padding:20px;
+  position:relative; z-index:2;
+}
+h1{
+  color:var(--gold); font-size:3em;
+  text-shadow:0 0 5px gold,0 0 10px gold,0 0 20px gold,0 0 40px orange;
+  animation: titlePulse 3s ease-in-out infinite;
+}
+@keyframes titlePulse{ 0%,100%{text-shadow:0 0 5px gold,0 0 10px gold,0 0 20px gold,0 0 40px orange} 50%{text-shadow:0 0 10px gold,0 0 25px gold,0 0 50px gold,0 0 80px orange} }
+.balance{
+  margin-top:10px; font-size:1.15em;
+  display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px;
+}
+#balance{
+  color:#ffd700; font-size:1.25em; font-weight:bold;
+  text-shadow:0 0 8px gold;
+  background:rgba(255,215,0,0.12);
+  border:1.5px solid rgba(255,215,0,0.4);
+  border-radius:20px; padding:2px 12px;
+  transition: all 0.3s;
+}
+#balance.bump{ transform:scale(1.3); color:#fff; }
+.player-header{ display:flex; align-items:center; justify-content:center; gap:12px; margin-top:8px; }
+.avatar-display{ font-size:3em; cursor:pointer; transition:0.2s; }
+.avatar-display:hover{ transform:scale(1.1); }
+#playerName{ font-size:1.1em; font-weight:bold; color:#ffd700; }
+#app{
+  width:95%; max-width:1200px; margin:auto; padding:30px 0;
+  position:relative; z-index:2;
+}
+.screen{ display:none; }
+.screen.active{ display:block; }
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+.menu-card{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px; padding:22px; text-align:center;
+  cursor:pointer; transition:0.3s;
+  backdrop-filter:blur(10px);
+  position:relative; overflow:hidden;
+}
+.menu-card::before{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,215,0,0.05),transparent);
+  opacity:0; transition:0.3s;
+}
+.menu-card:hover::before{ opacity:1; }
+.menu-card:hover{
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 0 30px rgba(255,215,0,0.4);
+  border-color:rgba(255,215,0,0.5);
+}
+.menu-card h2{ color:var(--gold); margin-bottom:8px; font-size:1.15em; }
+.menu-card .card-icon{ font-size:2.5em; margin-bottom:8px; display:block; }
+.game-area{
+  background:rgba(255,255,255,0.06);
+  border:2px solid var(--gold);
+  border-radius:20px; padding:30px;
+  backdrop-filter:blur(10px);
+}
+.cards{
+  display:flex; justify-content:center;
+  gap:20px; margin:30px 0; flex-wrap:wrap;
+}
+.card{
+  width:100px; height:140px;
+  background:white; color:black;
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2em; font-weight:bold;
+  box-shadow:0 10px 20px rgba(0,0,0,0.6);
+  transition:0.3s; transform-style:preserve-3d;
+  animation: cardDeal 0.4s ease-out;
+}
+@keyframes cardDeal{ from{opacity:0;transform:translateY(-30px) rotateZ(-10deg)} to{opacity:1;transform:translateY(0) rotateZ(0)} }
+.card:hover{ transform:rotateY(15deg) rotateX(15deg) scale(1.08); }
+.options{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:15px; margin-top:20px;
+}
+button{
+  border:none; border-radius:10px; padding:15px;
+  font-size:1em; font-weight:bold;
+  cursor:pointer; transition:0.2s;
+}
+button:hover{ transform:scale(1.05); }
+.option{ background:white; color:black; }
+.option.correct{ background:limegreen; color:white; animation:winFlash 0.5s; }
+.option.wrong{ background:crimson; color:white; animation:loseShake 0.4s; }
+@keyframes winFlash{ 0%,100%{background:limegreen} 50%{background:#90ff90} }
+@keyframes loseShake{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.action{ background:var(--gold); color:black; margin-top:20px; }
+.action:hover{ background:#ffea50; }
+.shop-item{
+  background:rgba(0,0,0,0.3);
+  border-radius:12px; padding:20px; margin:15px 0;
+  display:flex; justify-content:space-between; align-items:center;
+  transition:0.2s; border:1px solid transparent;
+}
+.shop-item:hover{ border-color:rgba(255,215,0,0.3); }
+.profile-box{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.15);
+  padding:20px; border-radius:16px; margin-top:20px;
+}
+.progress-bar{
+  width:100%; height:20px; background:#222;
+  border-radius:20px; overflow:hidden; margin-top:10px;
+}
+.progress-fill{
+  height:100%; width:0%;
+  background:linear-gradient(90deg,gold,orange);
+  transition:width 0.6s ease;
+}
+.inventory-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px; margin-top:16px;
+}
+.inventory-item{
+  background:rgba(0,0,0,0.25); padding:14px;
+  border-radius:14px; text-align:center;
+  transition:0.2s; border:2px solid transparent;
+}
+.inventory-item:hover{ border-color:rgba(255,215,0,0.3); }
+.tournament-card{
+  background:rgba(255,255,255,0.05);
+  border-left:5px solid gold;
+  padding:20px; border-radius:14px; margin:12px 0;
+  transition:0.2s;
+}
+.tournament-card:hover{ background:rgba(255,255,255,0.08); }
+.case-opening{
+  font-size:5em; margin:30px; text-align:center;
+  animation:bounce 0.5s infinite alternate;
+}
+@keyframes bounce{ from{transform:translateY(0) scale(1)} to{transform:translateY(-12px) scale(1.05)} }
+#achievement{
+  position:fixed; right:20px; bottom:20px;
+  background:linear-gradient(135deg,gold,orange);
+  color:black;
+  padding:16px 22px; border-radius:15px;
+  font-weight:bold; display:none; z-index:99999;
+  box-shadow:0 0 20px rgba(255,200,0,0.6);
+  animation:slideIn 0.3s ease-out;
+  max-width:280px;
+}
+@keyframes slideIn{ from{transform:translateX(120%)} to{transform:translateX(0)} }
+
+/* ── PROFILE EDIT ───────────────────────────────────────── */
+.profile-edit-box{
+  background:rgba(0,0,0,0.3);
+  border:1px solid rgba(255,215,0,0.3);
+  border-radius:14px; padding:20px; margin:16px 0;
+}
+.name-input{
+  width:100%; padding:12px; border-radius:10px;
+  border:2px solid gold; background:#111; color:white;
+  font-size:1.1em; margin:8px 0;
+}
+.avatar-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(60px,1fr));
+  gap:10px; margin-top:12px; max-height:260px; overflow-y:auto;
+}
+.avatar-option{
+  font-size:2em; text-align:center; cursor:pointer;
+  padding:8px; border-radius:10px;
+  border:2px solid transparent; transition:0.15s;
+  background:rgba(255,255,255,0.06);
+}
+.avatar-option:hover{ border-color:gold; transform:scale(1.1); }
+.avatar-option.selected{ border-color:gold; background:rgba(255,215,0,0.2); }
+
+/* ── SLOTS ─────────────────────────────────────────────── */
+.slots-machine{
+  background:linear-gradient(145deg,#1a0a00,#3a1500);
+  border:4px solid #ffd700;
+  border-radius:24px; padding:24px;
+  max-width:480px; margin:0 auto;
+  box-shadow:0 0 40px rgba(255,160,0,0.4), inset 0 0 20px rgba(0,0,0,0.5);
+}
+.slots-title{
+  text-align:center; font-size:1.5em; color:#ffd700;
+  text-shadow:0 0 12px gold; letter-spacing:3px;
+  margin-bottom:16px; font-weight:900; text-transform:uppercase;
+}
+.reels-wrap{
+  background:#0a0a0a; border:3px solid #555;
+  border-radius:14px; padding:8px;
+  display:flex; gap:6px; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.reels-wrap::before{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,0.1) 0%,transparent 25%,transparent 75%,rgba(0,0,0,0.3) 100%);
+  pointer-events:none; z-index:5; border-radius:12px;
+}
+.win-line{
+  position:absolute; top:50%; left:4px; right:4px;
+  height:4px; background:rgba(255,215,0,0.7);
+  transform:translateY(-50%); pointer-events:none; z-index:6;
+  border-radius:2px; box-shadow:0 0 8px gold;
+}
+.reel{
+  width:88px; height:240px;
+  overflow:hidden; border-radius:8px;
+  position:relative; background:#111;
+  border:1px solid #333;
+}
+.reel-strip{
+  display:flex; flex-direction:column;
+  will-change:transform;
+}
+.reel-symbol{
+  width:88px; height:80px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.6em; flex-shrink:0; user-select:none;
+  transition:none;
+}
+.reel.reel-win{
+  box-shadow:0 0 20px 6px gold;
+  animation:reelWinPulse 0.6s ease-in-out 3;
+}
+@keyframes reelWinPulse{ 0%,100%{box-shadow:0 0 20px 6px gold} 50%{box-shadow:0 0 40px 12px #ffec00} }
+.slots-controls{
+  margin-top:16px; display:flex; align-items:center;
+  justify-content:center; gap:12px; flex-wrap:wrap;
+}
+.slots-bet-label{ color:gold; font-weight:bold; }
+#slotBet{
+  padding:8px; border-radius:9px; border:2px solid gold;
+  background:#111; color:white; font-size:1em; width:90px; text-align:center;
+}
+#spinBtn{
+  background:linear-gradient(135deg,#ff8c00,#ffd700);
+  color:#000; font-size:1.1em; padding:14px 32px;
+  border-radius:14px; font-weight:900; letter-spacing:1px;
+  box-shadow:0 4px 15px rgba(255,160,0,0.5); transition:0.15s;
+  border:none; cursor:pointer;
+}
+#spinBtn:hover{ transform:scale(1.06); box-shadow:0 6px 22px rgba(255,160,0,0.7); }
+#spinBtn:disabled{ opacity:0.5; cursor:not-allowed; transform:none; }
+.slots-result{
+  text-align:center; min-height:2.2em; font-size:1.2em;
+  font-weight:bold; margin-top:12px;
+}
+.slots-symbols-display{
+  display:flex; justify-content:center; gap:12px;
+  font-size:3em; margin:10px 0; min-height:1.4em;
+}
+.slots-paytable{
+  margin-top:14px; background:rgba(0,0,0,0.35);
+  border-radius:12px; padding:12px;
+  font-size:0.82em; color:#ccc;
+}
+.slots-paytable h4{ color:gold; margin-bottom:8px; text-align:center; }
+.slots-paytable table{ width:100%; border-collapse:collapse; }
+.slots-paytable td{ padding:4px 8px; }
+.slots-paytable td:last-child{ color:gold; text-align:right; }
+
+/* ── TRUCK BETTING ─────────────────────────────────────── */
+.track-wrap{
+  background:linear-gradient(180deg,#1a2a0a,#0a1500);
+  border:3px solid gold; border-radius:16px;
+  padding:20px; margin:16px 0;
+  overflow:hidden;
+}
+.track-lane{
+  display:flex; align-items:center; gap:10px;
+  margin:10px 0; height:52px; position:relative;
+}
+.truck-name{
+  width:120px; font-size:0.85em; font-weight:bold; color:#ffd700; flex-shrink:0;
+}
+.truck-track{
+  flex:1; background:rgba(255,255,255,0.07);
+  border-radius:8px; height:36px;
+  position:relative; overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.truck-road-line{
+  position:absolute; top:50%; left:0; right:0;
+  height:2px; background:rgba(255,255,255,0.15); transform:translateY(-50%);
+}
+.truck-icon{
+  position:absolute; left:0%; top:50%;
+  transform:translateY(-50%);
+  font-size:1.8em; line-height:1;
+  transition: left 0.05s linear;
+  filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+}
+.truck-icon.winner-bounce{
+  animation:truckWin 0.3s ease-in-out infinite alternate;
+}
+@keyframes truckWin{ from{transform:translateY(-50%) scale(1)} to{transform:translateY(-60%) scale(1.1)} }
+.truck-odds{
+  width:50px; font-size:0.85em; color:#aaa; text-align:right; flex-shrink:0;
+}
+.bet-truck-btn{
+  padding:8px 14px; border-radius:8px; font-size:0.85em;
+  font-weight:bold; cursor:pointer; transition:0.15s;
+  border:2px solid transparent; background:rgba(255,255,255,0.1);
+  color:white; flex-shrink:0;
+}
+.bet-truck-btn:hover{ border-color:gold; background:rgba(255,215,0,0.2); }
+.bet-truck-btn.selected{ border-color:gold; background:rgba(255,215,0,0.25); color:gold; }
+.race-progress-bar{
+  width:100%; height:8px; background:#222;
+  border-radius:10px; overflow:hidden; margin-top:12px;
+}
+.race-progress-fill{
+  height:100%; width:0%; background:linear-gradient(90deg,#00cc44,#00ff88);
+  transition:width 0.1s linear; border-radius:10px;
+}
+.race-result-box{
+  text-align:center; font-size:1.2em; font-weight:bold;
+  margin:12px 0; min-height:2em;
+}
+
+/* ── TEXAS HOLD'EM ─────────────────────────────────────── */
+.poker-table{
+  background:radial-gradient(ellipse at center,#0a6b3a 0%,#053520 100%);
+  border:6px solid #5c3200;
+  border-radius:120px / 60px;
+  padding:22px; max-width:720px; margin:0 auto;
+  box-shadow:0 0 40px rgba(0,0,0,0.8), inset 0 0 60px rgba(0,0,0,0.3);
+  position:relative;
+}
+.poker-table::before{
+  content:''; position:absolute; inset:8px;
+  border:2px solid rgba(255,255,255,0.08);
+  border-radius:110px / 52px; pointer-events:none;
+}
+.poker-section-label{
+  text-align:center; font-size:0.75em;
+  text-transform:uppercase; letter-spacing:2px;
+  color:rgba(255,255,255,0.5); margin-bottom:5px;
+}
+.poker-hand{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:6px 0; }
+.pcard{
+  width:68px; height:98px;
+  background:white; color:black; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.25em; font-weight:bold;
+  box-shadow:0 6px 14px rgba(0,0,0,0.7);
+  transition:transform 0.2s;
+  animation:cardDeal 0.35s ease-out;
+}
+.pcard:hover{ transform:translateY(-6px); }
+.pcard.face-down{
+  background:linear-gradient(135deg,#1a3a8f,#0a1a4f);
+  color:transparent;
+  background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.05) 0px,rgba(255,255,255,0.05) 2px,transparent 2px,transparent 8px);
+}
+.pcard.highlight{ box-shadow:0 0 16px 4px gold; transform:translateY(-8px); }
+.community-cards{ display:flex; justify-content:center; gap:8px; margin:12px 0; flex-wrap:wrap; }
+.poker-info{ text-align:center; margin:8px 0; font-size:1em; color:rgba(255,255,255,0.9); min-height:1.5em; }
+.poker-pot{ text-align:center; color:gold; font-weight:bold; font-size:1.15em; margin:8px 0; }
+.poker-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
+.pbtn{ padding:12px 20px; border-radius:10px; font-weight:bold; font-size:0.9em; cursor:pointer; border:none; transition:0.15s; }
+.pbtn:hover{ transform:scale(1.07); }
+.pbtn-fold{ background:#c00; color:white; }
+.pbtn-call{ background:#1a7a3a; color:white; }
+.pbtn-raise{ background:#ffd700; color:#000; }
+.pbtn-check{ background:#2255aa; color:white; }
+.pbtn-allin{ background:linear-gradient(135deg,#ff4400,#ff8800); color:white; }
+.pbtn-new{ background:gold; color:#000; }
+.poker-chip-row{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+.chip{ width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.65em; font-weight:bold; cursor:pointer; transition:0.15s; border:3px dashed rgba(255,255,255,0.4); user-select:none; }
+.chip:hover{ transform:scale(1.15); }
+.chip-5   { background:#555; color:white; }
+.chip-25  { background:#1a5c1a; color:white; }
+.chip-50  { background:#00f; color:white; }
+.chip-100 { background:#aa0; color:#000; }
+.chip-500 { background:#8b0000; color:white; }
+.raise-display{ text-align:center; color:gold; font-weight:bold; font-size:1em; min-height:1.4em; margin:4px 0; }
+.poker-ai-chips{ font-size:0.85em; color:#ccc; text-align:center; margin-bottom:4px; }
+
+/* ── ROULETTE ──────────────────────────────────────────── */
+.bet-section { margin: 8px 0 4px; }
+.bet-section-label { color: #aaa; font-size: 0.82em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.bet-row { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 4px; }
+.rbet { border: 2px solid transparent; border-radius: 9px; padding: 8px 13px; font-size: 0.88em; font-weight: bold; cursor: pointer; transition: 0.15s; color: white; background: rgba(255,255,255,0.1); min-width: 44px; text-align: center; }
+.rbet:hover { transform: scale(1.07); }
+.rbet.sel { border: 2px solid gold; box-shadow: 0 0 8px gold; }
+.rbet.r  { background: #b00; }
+.rbet.b  { background: #181818; }
+.rbet.g  { background: #005500; }
+.rbet.d  { background: #1a3a6e; }
+.rbet.oe { background: #4a2060; }
+.rbet.num-r { background: #a00; font-size: 0.78em; padding: 6px 5px; min-width: 34px; }
+.rbet.num-b { background: #111; font-size: 0.78em; padding: 6px 5px; min-width: 34px; }
+.rbet.num-g { background: #004400; font-size: 0.78em; padding: 6px 5px; min-width: 34px; }
+.bet-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 8px 0; }
+.payout-tag { font-size: 0.7em; color: gold; display: block; margin-top: 1px; }
+
+/* ── TOURNAMENTS ───────────────────────────────────────── */
+.tourn-tabs{ display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.tourn-tab{ padding:8px 18px; border-radius:10px; cursor:pointer; font-weight:bold; border:2px solid transparent; background:rgba(255,255,255,0.08); color:#ccc; transition:0.2s; }
+.tourn-tab.active{ border-color:gold; color:gold; background:rgba(255,215,0,0.1); }
+.diff-badge{ display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.75em; font-weight:bold; margin-left:8px; }
+.diff-easy{ background:#1a5c1a; color:#90ff90; }
+.diff-med { background:#5c3a00; color:#ffd700; }
+.diff-hard{ background:#5c0000; color:#ff9090; }
+.bot-row{ display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.08); }
+.bot-row:last-child{ border-bottom:none; }
+.bot-chip{ width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2em; }
+.tourn-progress{ min-height:3em; }
+
+/* ── SHOP AVATARS ──────────────────────────────────────── */
+.shop-avatar-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
+  gap:10px; margin-top:12px;
+}
+.shop-avatar-item{
+  background:rgba(0,0,0,0.3); border-radius:12px;
+  padding:12px 6px; text-align:center;
+  border:2px solid transparent; transition:0.2s;
+}
+.shop-avatar-item:hover{ border-color:rgba(255,215,0,0.4); }
+.shop-avatar-item .av-icon{ font-size:2em; display:block; margin-bottom:4px; }
+.shop-avatar-item .av-price{ font-size:0.72em; color:gold; }
+.shop-avatar-item button{ padding:6px 10px; font-size:0.75em; margin-top:6px; border-radius:8px; }
+
+@media(max-width:768px){
+  h1{ font-size:2em; }
+  .options{ grid-template-columns:1fr; }
+  .card{ width:78px; height:118px; font-size:1.5em; }
+  .pcard{ width:52px; height:76px; font-size:1em; }
+  .poker-table{ border-radius:50px / 30px; }
+  .reel{ width:72px; height:216px; }
+  .reel-symbol{ width:72px; height:72px; font-size:2em; }
+  .truck-name{ width:90px; font-size:0.75em; }
+}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="casino-lights"></div>
+
+<header>
+  <h1>🎰 John's Casino Ultimate X</h1>
+  <div class="balance">
+    🪙 <span id="balance">1000</span> JohnCoins &nbsp;|&nbsp; 💡 Hints: <span id="hints">3</span> &nbsp;|&nbsp; ⭐ Level: <span id="level">1</span>
+  </div>
+  <div class="player-header">
+    <div class="avatar-display" id="avatarDisplay" onclick="openProfile()">😎</div>
+    <div id="playerName">Player John</div>
+  </div>
+</header>
+
+<div id="app">
+
+<!-- MENU -->
+<div id="menu" class="screen active">
+  <div class="menu-grid">
+    <div class="menu-card" onclick="openGame()"><span class="card-icon">🃏</span><h2>Blackjack</h2><p>Classic casino card game</p></div>
+    <div class="menu-card" onclick="openTexasHoldem()"><span class="card-icon">♠️</span><h2>Texas Hold'em</h2><p>Heads-up poker</p></div>
+    <div class="menu-card" onclick="openSlots()"><span class="card-icon">🎰</span><h2>Slot Machine</h2><p>Spin the reels!</p></div>
+    <div class="menu-card" onclick="openTruckBetting()"><span class="card-icon">🚛</span><h2>Truck Betting</h2><p>Bet on the fastest truck!</p></div>
+    <div class="menu-card" onclick="openRealRoulette()"><span class="card-icon">🎡</span><h2>Roulette</h2><p>Spin the wheel</p></div>
+    <div class="menu-card" onclick="openTournaments()"><span class="card-icon">🏆</span><h2>Tournaments</h2><p>Play vs bots for big prizes</p></div>
+    <div class="menu-card" onclick="openShop()"><span class="card-icon">🛒</span><h2>Shop</h2><p>Skins, avatars & boosts</p></div>
+    <div class="menu-card" onclick="openStats()"><span class="card-icon">📊</span><h2>Stats</h2><p>Your casino record</p></div>
+    <div class="menu-card" onclick="openLeaderboard()"><span class="card-icon">🏅</span><h2>Leaderboard</h2><p>Casino ranking</p></div>
+    <div class="menu-card" onclick="openAchievements()"><span class="card-icon">⭐</span><h2>Achievements</h2><p>Unlock rewards</p></div>
+    <div class="menu-card" onclick="openProfile()"><span class="card-icon">👤</span><h2>Profile</h2><p>Edit name & avatar</p></div>
+    <div class="menu-card" onclick="openCases()"><span class="card-icon">🎁</span><h2>Mystery Cases</h2><p>Open for surprises</p></div>
+    <div class="menu-card" onclick="openSkins()"><span class="card-icon">🎨</span><h2>My Skins</h2><p>Apply your skins</p></div>
+  </div>
+</div>
+
+<!-- BLACKJACK -->
+<div id="game" class="screen">
+  <div class="game-area">
+    <h2>🃏 Blackjack</h2>
+    <div class="cards" id="cards"></div>
+    <h3 id="question"></h3>
+    <div class="options" id="options"></div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- SLOTS -->
+<div id="slots" class="screen">
+  <div class="game-area">
+    <h2 style="text-align:center;color:gold;margin-bottom:16px">🎰 Slot Machine</h2>
+    <div class="slots-machine">
+      <div class="slots-title">✨ LUCKY REELS ✨</div>
+      <div class="reels-wrap" id="reelsWrap">
+        <div class="win-line"></div>
+        <div class="reel" id="reel0"><div class="reel-strip" id="strip0"></div></div>
+        <div class="reel" id="reel1"><div class="reel-strip" id="strip1"></div></div>
+        <div class="reel" id="reel2"><div class="reel-strip" id="strip2"></div></div>
+      </div>
+      <div class="slots-symbols-display" id="slotsSymDisplay"></div>
+      <div class="slots-controls">
+        <span class="slots-bet-label">Innsats:</span>
+        <input id="slotBet" type="number" min="50" max="5000" value="100">
+        <span style="color:gold">JohnCoins</span>
+      </div>
+      <div style="text-align:center;margin-top:10px">
+        <button id="spinBtn" onclick="doSpin()">🎰 SPIN</button>
+      </div>
+      <div class="slots-result" id="slotsResult"></div>
+      <div class="slots-paytable">
+        <h4>💰 Payouts (3 of a kind)</h4>
+        <table>
+          <tr><td>7️⃣ 7️⃣ 7️⃣</td><td>JACKPOT 100x</td></tr>
+          <tr><td>💎 💎 💎</td><td>50x</td></tr>
+          <tr><td>🍀 🍀 🍀</td><td>30x</td></tr>
+          <tr><td>⭐ ⭐ ⭐</td><td>20x</td></tr>
+          <tr><td>🍒 🍒 🍒</td><td>10x</td></tr>
+          <tr><td>🍋 🍋 🍋</td><td>8x</td></tr>
+          <tr><td>🔔 🔔 🔔</td><td>6x</td></tr>
+          <tr><td>🍇 🍇 🍇</td><td>5x</td></tr>
+          <tr><td>Any 2 matching</td><td>1.5x</td></tr>
+        </table>
+      </div>
+    </div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- TRUCK BETTING -->
+<div id="truckBetting" class="screen">
+  <div class="game-area">
+    <h2 style="text-align:center;color:gold">🚛 Truck Betting</h2>
+    <p style="text-align:center;color:#aaa;margin:8px 0 16px">Pick your truck — place your bet — watch the race!</p>
+    <div class="track-wrap" id="truckTrack"></div>
+    <div style="text-align:center;margin:12px 0">
+      <span style="color:gold;font-weight:bold">Bet: </span>
+      <input id="truckBetAmt" type="number" min="50" max="5000" value="100" style="padding:8px;border-radius:9px;border:2px solid gold;background:#111;color:white;font-size:1em;width:100px;text-align:center">
+      <span style="color:gold"> JohnCoins</span>
+    </div>
+    <div id="truckBetInfo" style="text-align:center;color:gold;font-weight:bold;min-height:1.4em;margin:6px 0"></div>
+    <div class="race-progress-bar"><div class="race-progress-fill" id="raceProgressFill"></div></div>
+    <div class="race-result-box" id="truckRaceResult"></div>
+    <div style="text-align:center;margin-top:10px">
+      <button id="truckStartBtn" onclick="startRace()" style="background:linear-gradient(135deg,#ff8c00,#ffd700);color:#000;font-size:1.1em;padding:14px 32px;border-radius:14px;font-weight:900;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(255,160,0,0.5)">🏁 START RACE</button>
+    </div>
+    <div style="text-align:center;margin-top:10px;font-size:0.85em;color:#888" id="truckHintInfo"></div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- TEXAS HOLD'EM -->
+<div id="texasHoldem" class="screen">
+  <div class="game-area">
+    <h2 style="text-align:center;color:gold;margin-bottom:14px">♠️ Texas Hold'em</h2>
+    <div class="poker-table">
+      <div class="poker-ai-chips">🤖 Dealer — Chips: <span id="dealerChips">2000</span></div>
+      <div class="poker-section-label">Dealer's Hand</div>
+      <div class="poker-hand" id="dealerHand"></div>
+      <div class="poker-section-label" style="margin-top:10px">Community Cards</div>
+      <div class="community-cards" id="communityCards"></div>
+      <div class="poker-pot">🏆 Pot: <span id="pokerPot">0</span> JohnCoins</div>
+      <div class="poker-info" id="pokerInfo">Press "New Hand" to start.</div>
+      <div class="poker-section-label">Your Hand</div>
+      <div class="poker-hand" id="playerHand"></div>
+    </div>
+    <div class="raise-display" id="raiseDisplay"></div>
+    <div class="poker-chip-row" id="chipRow" style="display:none">
+      <div class="chip chip-5" onclick="addRaise(5)">5</div>
+      <div class="chip chip-25" onclick="addRaise(25)">25</div>
+      <div class="chip chip-50" onclick="addRaise(50)">50</div>
+      <div class="chip chip-100" onclick="addRaise(100)">100</div>
+      <div class="chip chip-500" onclick="addRaise(500)">500</div>
+      <div class="chip" style="background:#333;border-color:#888" onclick="clearRaise()">✕</div>
+    </div>
+    <div class="poker-actions" id="pokerActions">
+      <button class="pbtn pbtn-new" onclick="newPokerHand()">🃏 New Hand</button>
+    </div>
+    <button class="action" onclick="backMenu()" style="margin-top:14px">← Tilbake</button>
+  </div>
+</div>
+
+<!-- ROULETTE -->
+<div id="realRoulette" class="screen">
+  <div class="game-area">
+    <h2>🎡 Roulette</h2>
+    <canvas id="rouletteCanvas" width="420" height="420" style="display:block;margin:0 auto;max-width:100%"></canvas>
+    <p id="rouletteResult" style="text-align:center;font-size:1.2em;min-height:1.6em;margin:10px 0;font-weight:bold"></p>
+    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+      <span style="color:gold;font-weight:bold">Innsats:</span>
+      <input id="rouletteBet" type="number" min="50" max="5000" value="100" style="padding:8px;border-radius:9px;border:2px solid gold;background:#111;color:white;font-size:1em;width:100px;text-align:center">
+      <span style="color:gold">JohnCoins</span>
+    </div>
+    <div class="bet-section">
+      <div class="bet-section-label" style="text-align:center">Farge</div>
+      <div class="bet-row">
+        <button class="rbet r" id="rb_red" onclick="setRBet('red')">🔴 Rød<span class="payout-tag">2x</span></button>
+        <button class="rbet b" id="rb_black" onclick="setRBet('black')">⚫ Sort<span class="payout-tag">2x</span></button>
+        <button class="rbet g" id="rb_green" onclick="setRBet('green')">💚 0 (Grønn)<span class="payout-tag">36x</span></button>
+      </div>
+    </div>
+    <hr class="bet-divider">
+    <div class="bet-section">
+      <div class="bet-section-label" style="text-align:center">Odd / Partall</div>
+      <div class="bet-row">
+        <button class="rbet oe" id="rb_odd" onclick="setRBet('odd')">Odde<span class="payout-tag">2x</span></button>
+        <button class="rbet oe" id="rb_even" onclick="setRBet('even')">Partall<span class="payout-tag">2x</span></button>
+      </div>
+    </div>
+    <hr class="bet-divider">
+    <div class="bet-section">
+      <div class="bet-section-label" style="text-align:center">Halvdel</div>
+      <div class="bet-row">
+        <button class="rbet d" id="rb_low" onclick="setRBet('low')">1–18<span class="payout-tag">2x</span></button>
+        <button class="rbet d" id="rb_high" onclick="setRBet('high')">19–36<span class="payout-tag">2x</span></button>
+      </div>
+    </div>
+    <hr class="bet-divider">
+    <div class="bet-section">
+      <div class="bet-section-label" style="text-align:center">Dusin</div>
+      <div class="bet-row">
+        <button class="rbet d" id="rb_d1" onclick="setRBet('dozen1')">1–12<span class="payout-tag">3x</span></button>
+        <button class="rbet d" id="rb_d2" onclick="setRBet('dozen2')">13–24<span class="payout-tag">3x</span></button>
+        <button class="rbet d" id="rb_d3" onclick="setRBet('dozen3')">25–36<span class="payout-tag">3x</span></button>
+      </div>
+    </div>
+    <hr class="bet-divider">
+    <div class="bet-section">
+      <div class="bet-section-label" style="text-align:center">Enkelt nummer</div>
+      <div class="bet-row" id="numberBtns"></div>
+    </div>
+    <div id="betDisplay" style="text-align:center;color:gold;font-weight:bold;min-height:1.4em;margin:8px 0"></div>
+    <button class="action" onclick="spinWheel()">🎰 SPIN</button>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div id="shop" class="screen">
+  <div class="game-area">
+    <h2>🛒 Shop</h2>
+    <!-- Boosts -->
+    <h3 style="color:gold;margin:12px 0 8px">⚡ Boosts</h3>
+    <div class="shop-item">
+      <div><h3>💎 VIP</h3><p>2x gevinst på alle spill</p></div>
+      <button class="action" id="shopVipBtn" onclick="buyVip()">🪙 1000</button>
+    </div>
+    <div class="shop-item">
+      <div><h3>💡 Hint ×3</h3><p>Brukes i Truck Betting</p></div>
+      <button class="action" onclick="buyHints()">🪙 300</button>
+    </div>
+    <div class="shop-item">
+      <div><h3>🍀 Lucky Card</h3><p>Neste tap reddes automatisk</p></div>
+      <button class="action" onclick="buyLucky()">🪙 700</button>
+    </div>
+    <hr style="border-color:rgba(255,255,255,0.1);margin:20px 0">
+    <!-- Avatars -->
+    <h3 style="color:gold;margin-bottom:10px">🧑 Profilbilder</h3>
+    <div class="shop-avatar-grid" id="shopAvatarGrid"></div>
+    <hr style="border-color:rgba(255,255,255,0.1);margin:20px 0">
+    <!-- Skins -->
+    <h3 style="color:gold;margin-bottom:10px">🎨 Skins</h3>
+    <div id="shopSkinList"></div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="screen">
+  <div class="game-area">
+    <h2>👤 Profile</h2>
+    <div class="profile-box">
+      <div style="font-size:4em;text-align:center;margin-bottom:10px" id="profileAvatar">😎</div>
+      <p style="text-align:center;color:#aaa;font-size:0.85em">Tap an avatar below to change it</p>
+      <div class="profile-edit-box">
+        <label style="color:gold;font-weight:bold">Player Name:</label>
+        <input class="name-input" id="nameInput" type="text" maxlength="20" placeholder="Enter your name...">
+        <button class="action" onclick="saveName()" style="width:100%">💾 Save Name</button>
+      </div>
+      <div class="profile-edit-box">
+        <label style="color:gold;font-weight:bold;display:block;margin-bottom:8px">Choose Avatar:</label>
+        <div class="avatar-grid" id="avatarGrid"></div>
+      </div>
+      <p style="margin-top:12px">Level: <span id="profileLevel">1</span></p>
+      <div class="progress-bar"><div class="progress-fill" id="xpFill"></div></div>
+      <p style="margin-top:12px">🪙 JohnCoins: <strong id="profileBalance">0</strong></p>
+    </div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- CASES -->
+<div id="cases" class="screen">
+  <div class="game-area">
+    <h2>🎁 Mystery Cases</h2>
+    <div class="case-opening" id="caseItem">🎁</div>
+    <button class="action" onclick="openCase()">Åpne Case (500 JohnCoins)</button>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- SKINS -->
+<div id="skins" class="screen">
+  <div class="game-area">
+    <h2>🎨 Mine Skins</h2>
+    <p style="color:#aaa;text-align:center;margin-bottom:14px">Skins du eier — kjøp flere i Shoppen</p>
+    <div class="inventory-grid" id="skinsInventory"></div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- TOURNAMENTS -->
+<div id="tournaments" class="screen">
+  <div class="game-area">
+    <h2>🏆 Tournaments</h2>
+    <div class="tourn-tabs" id="tournTabs"></div>
+    <div id="tournContent"></div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- STATS -->
+<div id="stats" class="screen">
+  <div class="game-area">
+    <h2>📊 Stats</h2>
+    <div class="profile-box" style="margin-top:0">
+      <p>🎮 Spill spilt: <strong id="statGames">0</strong></p>
+      <p style="margin-top:10px">✅ Vunnet: <strong id="statWins">0</strong></p>
+      <p style="margin-top:10px">❌ Tapt: <strong id="statLosses">0</strong></p>
+      <p style="margin-top:10px">🎡 Roulette spins: <strong id="statSpins">0</strong></p>
+      <p style="margin-top:10px">🎰 Slot spins: <strong id="statSlotSpins">0</strong></p>
+      <p style="margin-top:10px">♠️ Poker hender: <strong id="statPokerHands">0</strong></p>
+      <p style="margin-top:10px">🚛 Truck races: <strong id="statTruckRaces">0</strong></p>
+      <p style="margin-top:10px">🎁 Cases åpnet: <strong id="statCases">0</strong></p>
+      <p style="margin-top:10px">🏆 Turneringer vunnet: <strong id="statTourneys">0</strong></p>
+    </div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="leaderboard" class="screen">
+  <div class="game-area">
+    <h2>🏅 Leaderboard</h2>
+    <div id="leaderboardList"></div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div id="achievements" class="screen">
+  <div class="game-area">
+    <h2>⭐ Achievements</h2>
+    <div id="achievementList"></div>
+    <button class="action" onclick="backMenu()">← Tilbake</button>
+  </div>
+</div>
+
+</div>
+<div id="achievement"></div>
+
+<script>
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let state = {
+  balance:1000, hints:3, level:1, xp:0,
+  gamesPlayed:0, wins:0, losses:0,
+  rouletteSpins:0, casesOpened:0, tourneysWon:0,
+  slotSpins:0, pokerHands:0, truckRaces:0,
+  vip:false, lucky:false,
+  ownedSkins:['green'], activeSkin:'green',
+  ownedAvatars:['😎','🤠','😏'],
+  activeAvatar:'😎',
+  playerName:'Player John',
+  _slotJackpot:false, _pokerWins:0, _truckWins:0, _tournamentsWon:0
+};
+
+// ══════════════════════════════════════════════
+//  ACHIEVEMENTS
+// ══════════════════════════════════════════════
+const ACHIEVEMENTS_DEF = [
+  { id:"first_win",    label:"🥇 Første seier",       desc:"Vinn et Blackjack-spill",        check:s=>s.wins>=1 },
+  { id:"win5",         label:"🔥 5 seire",             desc:"Vinn 5 spill",                   check:s=>s.wins>=5 },
+  { id:"win20",        label:"🏅 20 seire",            desc:"Vinn 20 spill",                  check:s=>s.wins>=20 },
+  { id:"win50",        label:"💥 50 seire",            desc:"Vinn 50 spill",                  check:s=>s.wins>=50 },
+  { id:"rich",         label:"💰 Rik",                 desc:"Ha 5 000+ JohnCoins",            check:s=>s.balance>=5000 },
+  { id:"millionaire",  label:"💵 Millionær",           desc:"Ha 50 000+ JohnCoins",           check:s=>s.balance>=50000 },
+  { id:"level5",       label:"⭐ Level 5",             desc:"Nå level 5",                     check:s=>s.level>=5 },
+  { id:"level10",      label:"🌟 Level 10",            desc:"Nå level 10",                    check:s=>s.level>=10 },
+  { id:"roulette3",    label:"🎡 Roulette-fan",        desc:"Spin roulette 3 ganger",         check:s=>s.rouletteSpins>=3 },
+  { id:"roulette25",   label:"🎡 Roulette-mester",     desc:"Spin roulette 25 ganger",        check:s=>s.rouletteSpins>=25 },
+  { id:"case5",        label:"🎁 Case-åpner",          desc:"Åpne 5 cases",                   check:s=>s.casesOpened>=5 },
+  { id:"case20",       label:"🎁 Case-avhengig",       desc:"Åpne 20 cases",                  check:s=>s.casesOpened>=20 },
+  { id:"tourney1",     label:"🏆 Turneringsdebutant",  desc:"Vinn 1 turnering",               check:s=>s.tourneysWon>=1 },
+  { id:"tourney5",     label:"🏆 Turneringsmester",    desc:"Vinn 5 turneringer",             check:s=>s.tourneysWon>=5 },
+  { id:"slot_jackpot", label:"7️⃣ JACKPOT!",           desc:"Vinn slot-jackpot",              check:s=>s._slotJackpot },
+  { id:"poker_win5",   label:"♠️ Poker-mester",        desc:"Vinn 5 poker-hender",            check:s=>s._pokerWins>=5 },
+  { id:"truck_win1",   label:"🚛 Rookie Racer",        desc:"Vinn 1 truck-race",              check:s=>s._truckWins>=1 },
+  { id:"truck_win10",  label:"🚛 Truck Legend",        desc:"Vinn 10 truck-races",            check:s=>s._truckWins>=10 },
+  { id:"broke",        label:"💸 Broke",               desc:"Gå tom for JohnCoins",           check:s=>s.balance<=0 },
+  { id:"hoarder",      label:"🐉 Drager",              desc:"Ha 200+ JohnCoins uten å spille",check:s=>s.balance>=200&&s.gamesPlayed===0 },
+  { id:"highroller",   label:"🎩 High Roller",         desc:"Spill med 1000+ innsats",        check:s=>s._bigBet },
+  { id:"lucky_saved",  label:"🍀 Lucky Save",          desc:"Bli reddet av Lucky Card",       check:s=>s._luckySaved },
+  { id:"skin_collect", label:"🎨 Skin-samleren",       desc:"Eie 5+ skins",                   check:s=>s.ownedSkins.length>=5 },
+  { id:"avatar_collect",label:"🧑 Avatar-jeger",       desc:"Eie 5+ avatarer",                check:s=>s.ownedAvatars.length>=5 },
+];
+let unlockedAchievements = new Set();
+
+const leaderboardData = [
+  { name:"🤖 CasinoBot", score:48200 },
+  { name:"👑 VegasKing",  score:31500 },
+  { name:"🎲 LuckyLuke",  score:22100 },
+  { name:"💎 DiamondDave",score:17800 },
+  { name:"🃏 AceHigh",    score:12300 },
+];
+
+// ══════════════════════════════════════════════
+//  UI HELPERS
+// ══════════════════════════════════════════════
+function updateUI() {
+  const balEl = document.getElementById("balance");
+  balEl.innerText = state.balance.toLocaleString();
+  balEl.classList.add('bump');
+  setTimeout(()=>balEl.classList.remove('bump'), 400);
+  document.getElementById("hints").innerText   = state.hints;
+  document.getElementById("level").innerText   = state.level;
+  document.getElementById("avatarDisplay").innerText = state.activeAvatar;
+  document.getElementById("playerName").innerText    = state.playerName;
+  checkAchievements();
+}
+function screen(id) {
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function backMenu(){ screen("menu"); }
+function showAchievement(text){
+  const a=document.getElementById("achievement");
+  a.innerText=text; a.style.display="block";
+  clearTimeout(a._t);
+  a._t=setTimeout(()=>{ a.style.display="none"; },3500);
+}
+function checkAchievements(){
+  ACHIEVEMENTS_DEF.forEach(def=>{
+    if(!unlockedAchievements.has(def.id)&&def.check(state)){
+      unlockedAchievements.add(def.id);
+      setTimeout(()=>showAchievement("🏅 Achievement: "+def.label), 400);
+    }
+  });
+}
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];
+  }
+}
+function bumpBalance(){ }
+
+// ══════════════════════════════════════════════
+//  PROFILE EDITOR
+// ══════════════════════════════════════════════
+const ALL_AVATARS = [
+  '😎','🤠','😏','🥸','🤑','👹','💀','🤖','👽','🦊',
+  '🐺','🦁','🐯','🦄','🐸','🐧','🦅','🐉','🎭','🧙',
+  '👑','🤴','👸','🕵️','🤡','💃','🕺','🧛','🧟','⚡'
+];
+const SHOP_AVATARS = [
+  {id:'🤑',price:500},{id:'👹',price:800},{id:'💀',price:1000},
+  {id:'🤖',price:600},{id:'👽',price:700},{id:'🦊',price:400},
+  {id:'🐺',price:400},{id:'🦁',price:500},{id:'🐯',price:500},
+  {id:'🦄',price:800},{id:'🐸',price:300},{id:'🐧',price:300},
+  {id:'🦅',price:600},{id:'🐉',price:1500},{id:'🎭',price:700},
+  {id:'🧙',price:900},{id:'💃',price:400},{id:'🧛',price:1200},
+  {id:'🧟',price:1100},{id:'⚡',price:800},{id:'👑',price:2000},
+];
+
+function openProfile(){
+  screen("profile");
+  document.getElementById("nameInput").value = state.playerName;
+  document.getElementById("profileLevel").innerText   = state.level;
+  document.getElementById("profileBalance").innerText = state.balance.toLocaleString();
+  document.getElementById("profileAvatar").innerText  = state.activeAvatar;
+  document.getElementById("xpFill").style.width = Math.min(100,(state.xp/(state.level*100))*100)+"%";
+  // Build avatar grid
+  const grid=document.getElementById("avatarGrid");
+  grid.innerHTML='';
+  state.ownedAvatars.forEach(av=>{
+    const d=document.createElement('div');
+    d.className='avatar-option'+(av===state.activeAvatar?' selected':'');
+    d.textContent=av;
+    d.onclick=()=>{ state.activeAvatar=av; updateUI(); renderAvatarGrid(); document.getElementById("profileAvatar").innerText=av; };
+    grid.appendChild(d);
+  });
+}
+function renderAvatarGrid(){
+  const grid=document.getElementById("avatarGrid");
+  if(!grid) return;
+  grid.querySelectorAll('.avatar-option').forEach(d=>{
+    d.classList.toggle('selected', d.textContent===state.activeAvatar);
+  });
+}
+function saveName(){
+  const n = document.getElementById("nameInput").value.trim();
+  if(n.length<1){ showAchievement("⚠️ Navn kan ikke være tomt!"); return; }
+  state.playerName = n;
+  updateUI();
+  showAchievement("✅ Navn lagret: "+n);
+}
+
+// ══════════════════════════════════════════════
+//  SHOP
+// ══════════════════════════════════════════════
+function openShop(){ screen("shop"); renderShopAvatars(); renderShopSkins(); refreshShopBtns(); }
+function buyVip(){
+  if(state.balance>=1000){ state.balance-=1000; state.vip=true; showAchievement("💎 VIP aktivert! 2x gevinst!"); }
+  else showAchievement("❌ Ikke nok JohnCoins");
+  updateUI();
+}
+function buyHints(){
+  if(state.balance>=300){ state.balance-=300; state.hints+=3; showAchievement("💡 +3 Hints kjøpt!"); }
+  else showAchievement("❌ Ikke nok JohnCoins");
+  updateUI();
+}
+function buyLucky(){
+  if(state.balance>=700){ state.balance-=700; state.lucky=true; showAchievement("🍀 Lucky Card aktivert!"); }
+  else showAchievement("❌ Ikke nok JohnCoins");
+  updateUI();
+}
+function renderShopAvatars(){
+  const grid=document.getElementById("shopAvatarGrid");
+  if(!grid) return;
+  grid.innerHTML = SHOP_AVATARS.map(av=>{
+    const owned = state.ownedAvatars.includes(av.id);
+    return `<div class="shop-avatar-item">
+      <span class="av-icon">${av.id}</span>
+      <div class="av-price">${owned?'✅ Eid':'🪙 '+av.price}</div>
+      <button class="action" style="padding:5px 10px;font-size:0.75em;margin-top:4px" onclick="buyAvatar('${av.id}')" ${owned?'disabled style="background:#444;cursor:default"':''}>
+        ${owned?'Eid':'Kjøp'}
+      </button>
+    </div>`;
+  }).join('');
+}
+function buyAvatar(id){
+  const av = SHOP_AVATARS.find(a=>a.id===id);
+  if(!av) return;
+  if(state.ownedAvatars.includes(id)){ showAchievement("✅ Du eier allerede denne!"); return; }
+  if(state.balance<av.price){ showAchievement("❌ Ikke nok JohnCoins!"); return; }
+  state.balance-=av.price; state.ownedAvatars.push(id);
+  showAchievement("🧑 Avatar kjøpt: "+id);
+  updateUI(); renderShopAvatars();
+}
+
+const SKIN_DEFS={
+  green:   {label:'🌿 Grønn',    bg:'radial-gradient(circle at top,#0f8f54 0%,#041b11 70%)',  price:0},
+  red:     {label:'🟥 Rød',      bg:'radial-gradient(circle at top,#8f1a0f 0%,#1b0400 70%)',  price:500},
+  blue:    {label:'🔵 Blå',      bg:'radial-gradient(circle at top,#0f4a8f 0%,#020d1b 70%)',  price:500},
+  purple:  {label:'🟣 Lilla',    bg:'radial-gradient(circle at top,#5a0f8f 0%,#0e0018 70%)',  price:600},
+  pink:    {label:'🩷 Rosa',     bg:'radial-gradient(circle at top,#8f0f6a 0%,#1b0015 70%)',  price:600},
+  yellow:  {label:'🟡 Gul',      bg:'radial-gradient(circle at top,#8f7c0f 0%,#1b1600 70%)',  price:600},
+  orange:  {label:'🟠 Oransje',  bg:'radial-gradient(circle at top,#8f4a0f 0%,#1b0800 70%)',  price:600},
+  black:   {label:'⬛ Svart',    bg:'radial-gradient(circle at top,#1a1a1a 0%,#000000 70%)',  price:1000},
+  white:   {label:'⬜ Hvit',     bg:'radial-gradient(circle at top,#e0e0e0 0%,#a0a0a0 70%)',  price:1000},
+  ocean:   {label:'🌊 Hav',      bg:'radial-gradient(circle at top,#0040a0 0%,#001030 70%)',  price:800},
+  sunset:  {label:'🌅 Solnedgang',bg:'radial-gradient(circle at top,#b05000 0%,#300010 70%)', price:800},
+  forest:  {label:'🌲 Skog',     bg:'radial-gradient(circle at top,#1a5a1a 0%,#051005 70%)',  price:700},
+  galaxy:  {label:'🌌 Galakse',  bg:'radial-gradient(circle at top,#200040 0%,#000010 70%)',  price:1200},
+  fire:    {label:'🔥 Ild',      bg:'radial-gradient(circle at top,#cc2200 0%,#200000 70%)',  price:1000},
+  ice:     {label:'🧊 Is',       bg:'radial-gradient(circle at top,#60c0e0 0%,#001020 70%)',  price:1000},
+  gold:    {label:'✨ Gull',     bg:'radial-gradient(circle at top,#a08000 0%,#201000 70%)',  price:2000},
+  neon:    {label:'💜 Neon',     bg:'radial-gradient(circle at top,#8000ff 0%,#100020 70%)',  price:1500},
+  cyber:   {label:'🤖 Cyber',    bg:'linear-gradient(180deg,#001a1a 0%,#00ff88 15%,#001a1a 30%,#001a1a 100%)',price:1800},
+};
+
+function renderShopSkins(){
+  const list=document.getElementById("shopSkinList");
+  if(!list) return;
+  list.innerHTML = Object.entries(SKIN_DEFS).map(([key,def])=>{
+    if(def.price===0) return '';
+    const owned=state.ownedSkins.includes(key);
+    return `<div class="shop-item">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:40px;height:40px;border-radius:8px;background:${def.bg};border:1px solid rgba(255,255,255,0.2);flex-shrink:0"></div>
+        <div><h3>${def.label}</h3></div>
+      </div>
+      <button class="action" ${owned?'disabled style="background:#2a6a2a;cursor:default"':''} onclick="buySkin('${key}')">
+        ${owned?'✅ Eid':'🪙 '+def.price}
+      </button>
+    </div>`;
+  }).join('');
+}
+function refreshShopBtns(){
+  if(state.vip){
+    const vipBtn=document.getElementById("shopVipBtn");
+    if(vipBtn){ vipBtn.textContent="✅ Aktivert"; vipBtn.style.background="#2a6a2a"; vipBtn.onclick=null; }
+  }
+}
+function buySkin(key){
+  const def=SKIN_DEFS[key];
+  if(!def) return;
+  if(state.ownedSkins.includes(key)){ showAchievement("✅ Du eier allerede denne skin!"); return; }
+  if(state.balance<def.price){ showAchievement("❌ Ikke nok JohnCoins!"); return; }
+  state.balance-=def.price; state.ownedSkins.push(key);
+  showAchievement("🎨 Kjøpt: "+def.label); updateUI(); renderShopSkins();
+}
+function openSkins(){ screen("skins"); renderSkinsInventory(); }
+function renderSkinsInventory(){
+  const grid=document.getElementById("skinsInventory");
+  if(!grid) return;
+  grid.innerHTML=Object.entries(SKIN_DEFS).map(([key,def])=>{
+    const owned=state.ownedSkins.includes(key);
+    const active=state.activeSkin===key;
+    if(!owned) return '';
+    return `<div class="inventory-item" style="border-color:${active?'gold':'transparent'}">
+      <h3 style="font-size:0.9em">${def.label}</h3>
+      <div style="width:100%;height:30px;border-radius:6px;margin:8px 0;background:${def.bg};border:1px solid rgba(255,255,255,0.2)"></div>
+      ${active?`<button class="action" style="background:#555;cursor:default;width:100%">✅ Aktiv</button>`
+        :`<button class="action" style="width:100%" onclick="activateSkin('${key}')">Bruk</button>`}
+    </div>`;
+  }).join("");
+}
+function activateSkin(key){
+  if(!state.ownedSkins.includes(key)) return;
+  state.activeSkin=key;
+  document.body.style.background=SKIN_DEFS[key].bg;
+  showAchievement("🎨 Skin aktivert: "+SKIN_DEFS[key].label);
+  renderSkinsInventory();
+}
+
+// ══════════════════════════════════════════════
+//  BLACKJACK
+// ══════════════════════════════════════════════
+const SUITS=["♠","♥","♦","♣"];
+const RANKS=["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
+const RANK_VAL={2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,J:11,Q:12,K:13,A:14};
+
+function makeCard(rank,suit){ return {rank,suit}; }
+function cardColor(c){ return (c.suit==="♥"||c.suit==="♦")?"#cc0000":"#000"; }
+function cardLabel(c){ return c.rank+c.suit; }
+function buildDeck(){ const d=[]; SUITS.forEach(s=>RANKS.forEach(r=>d.push(makeCard(r,s)))); shuffle(d); return d; }
+function cardValue(r){ if(["J","Q","K"].includes(r)) return 10; if(r==="A") return 11; return parseInt(r); }
+function handTotal(h){ let t=0,a=0; h.forEach(c=>{ t+=cardValue(c.rank); if(c.rank==="A") a++; }); while(t>21&&a>0){t-=10;a--;} return t; }
+
+let bjState={};
+function openGame(){ screen("game"); startBlackjack(); }
+function startBlackjack(){
+  const deck=buildDeck();
+  bjState={ deck, player:[deck.pop(),deck.pop()], dealer:[deck.pop(),deck.pop()], done:false, bet:100 };
+  renderBlackjack();
+}
+function renderBlackjack(showDealer=false,resultMsg=""){
+  const {player,dealer}=bjState; const pTotal=handTotal(player);
+  let html='<div style="width:100%;text-align:center;margin-bottom:6px;color:gold;font-weight:bold">🤖 Dealer</div>';
+  dealer.forEach((c,i)=>{
+    if(i===1&&!showDealer) html+=`<div class="card" style="background:#1a472a;border:3px solid gold;font-size:1.2em">🂠</div>`;
+    else html+=`<div class="card" style="color:${cardColor(c)}">${cardLabel(c)}</div>`;
+  });
+  html+=`<div style="width:100%;text-align:center;margin:12px 0 6px;color:gold;font-weight:bold">👤 Du (${pTotal})</div>`;
+  player.forEach(c=>{ html+=`<div class="card" style="color:${cardColor(c)}">${cardLabel(c)}</div>`; });
+  document.getElementById("cards").innerHTML=html;
+  const qEl=document.getElementById("question");
+  if(resultMsg) qEl.innerHTML=resultMsg;
+  else if(pTotal===21) qEl.innerText="🎉 21! Velg neste:";
+  else qEl.innerText=`Din sum: ${pTotal}. Hva gjør du?`;
+  const optEl=document.getElementById("options");
+  if(bjState.done){
+    optEl.innerHTML=`<button class="option correct" onclick="startBlackjack()" style="grid-column:1/3">🔄 Nytt spill</button>`;
+  } else {
+    const canDouble=player.length===2&&state.balance>=bjState.bet;
+    optEl.innerHTML=`
+      <button class="option" onclick="bjHit()">🃏 Hit</button>
+      <button class="option" onclick="bjStand()">✋ Stand</button>
+      ${canDouble?`<button class="option" onclick="bjDouble()" style="grid-column:1/3;background:#ffd700;color:#000">💰 Double Down</button>`:''}
+    `;
+  }
+}
+function bjHit(){
+  if(bjState.done) return;
+  bjState.player.push(bjState.deck.pop());
+  const total=handTotal(bjState.player);
+  state.gamesPlayed++;
+  if(total>21){
+    bjState.done=true; state.losses++; state.balance-=bjState.bet;
+    if(state.lucky){ state.balance+=bjState.bet; state.lucky=false; state._luckySaved=true; showAchievement("🍀 Lucky Card reddet deg!"); }
+    renderBlackjack(true,`<span style="color:#ff6060">💥 Bust! Sum: ${total}. Tapte ${bjState.bet} JohnCoins.</span>`);
+  } else if(total===21){ bjStand(); }
+  else { renderBlackjack(); }
+  updateUI();
+}
+function bjStand(){
+  if(bjState.done) return;
+  while(handTotal(bjState.dealer)<17) bjState.dealer.push(bjState.deck.pop());
+  bjState.done=true; state.gamesPlayed++;
+  const p=handTotal(bjState.player),d=handTotal(bjState.dealer);
+  let msg;
+  if(d>21||p>d){
+    state.wins++; const gain=state.vip?bjState.bet*2:bjState.bet;
+    state.balance+=gain; state.xp+=30;
+    msg=`<span style="color:limegreen">🎉 Du vinner! Du: ${p}, Dealer: ${d>21?"bust":d}. +${gain} JohnCoins</span>`;
+  } else if(p===d){
+    msg=`<span style="color:gold">🤝 Uavgjort! Begge: ${p}.</span>`;
+  } else {
+    state.losses++; state.balance-=bjState.bet;
+    if(state.lucky){ state.balance+=bjState.bet; state.lucky=false; state._luckySaved=true; showAchievement("🍀 Lucky Card reddet deg!"); }
+    msg=`<span style="color:#ff6060">😔 Dealer vinner. Du: ${p}, Dealer: ${d}. -${bjState.bet} JohnCoins</span>`;
+  }
+  if(state.xp>=state.level*100){ state.level++; showAchievement("⭐ LEVEL UP! Level "+state.level); }
+  renderBlackjack(true,msg); updateUI();
+}
+function bjDouble(){
+  if(bjState.done||bjState.player.length!==2) return;
+  if(bjState.bet*2>state.balance){ showAchievement("❌ Ikke nok JohnCoins!"); return; }
+  bjState.bet*=2; state._bigBet=true; bjHit(); if(!bjState.done) bjStand();
+}
+
+// ══════════════════════════════════════════════
+//  SLOT MACHINE
+// ══════════════════════════════════════════════
+const SLOT_SYMBOLS=['7️⃣','💎','🍀','⭐','🍒','🍋','🔔','🍇','🍉','💰'];
+const SLOT_WEIGHTS=[1,2,3,4,6,8,8,10,10,8];
+const SLOT_PAYOUTS={'7️⃣':100,'💎':50,'🍀':30,'⭐':20,'🍒':10,'🍋':8,'🔔':6,'🍇':5,'🍉':4,'💰':3};
+let slotSpinning=false;
+
+function weightedRandom(){
+  const total=SLOT_WEIGHTS.reduce((a,b)=>a+b,0); let r=Math.random()*total;
+  for(let i=0;i<SLOT_SYMBOLS.length;i++){ r-=SLOT_WEIGHTS[i]; if(r<=0) return i; }
+  return SLOT_SYMBOLS.length-1;
+}
+
+function openSlots(){
+  screen('slots');
+  [0,1,2].forEach(i=>{
+    const strip=document.getElementById('strip'+i);
+    strip.style.transition='none'; strip.style.transform='translateY(-80px)';
+    strip.innerHTML='';
+    for(let j=0;j<5;j++){
+      const div=document.createElement('div'); div.className='reel-symbol';
+      div.textContent=SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)];
+      strip.appendChild(div);
+    }
+  });
+  document.getElementById('slotsResult').innerText='';
+  document.getElementById('slotsSymDisplay').innerText='';
+  [0,1,2].forEach(i=>document.getElementById('reel'+i).classList.remove('reel-win'));
+}
+
+function doSpin(){
+  if(slotSpinning) return;
+  const bet=parseInt(document.getElementById('slotBet').value)||100;
+  if(bet<50){ showAchievement('⚠️ Minste innsats: 50'); return; }
+  if(bet>state.balance){ showAchievement('❌ Ikke nok JohnCoins'); return; }
+  if(bet>=1000) state._bigBet=true;
+  state.balance-=bet; state.slotSpins++; state.gamesPlayed++;
+  updateUI();
+  slotSpinning=true;
+  document.getElementById('spinBtn').disabled=true;
+  document.getElementById('slotsResult').innerText='🎰 Snurrer...';
+  document.getElementById('slotsSymDisplay').innerText='';
+  [0,1,2].forEach(i=>document.getElementById('reel'+i).classList.remove('reel-win'));
+  const results=[weightedRandom(),weightedRandom(),weightedRandom()];
+  const promises=[0,1,2].map(i=>animateReel(i,results[i],i*380));
+  Promise.all(promises).then(()=>{
+    slotSpinning=false;
+    document.getElementById('spinBtn').disabled=false;
+    // Show symbols clearly
+    document.getElementById('slotsSymDisplay').innerHTML =
+      results.map(i=>`<span style="display:inline-block;animation:bounce 0.4s ease-in-out ${results.indexOf(i)*0.1}s">${SLOT_SYMBOLS[i]}</span>`).join('');
+    evaluateSlots(results,bet);
+  });
+}
+
+function animateReel(reelIdx,targetSymIdx,delayMs){
+  return new Promise(resolve=>{
+    setTimeout(()=>{
+      const strip=document.getElementById('strip'+reelIdx);
+      const syms=[];
+      for(let i=0;i<22;i++) syms.push(SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]);
+      syms.push(SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]);
+      syms.push(SLOT_SYMBOLS[targetSymIdx]);
+      syms.push(SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]);
+      strip.innerHTML=''; strip.style.transition='none'; strip.style.transform='translateY(0)';
+      syms.forEach(s=>{ const d=document.createElement('div'); d.className='reel-symbol'; d.textContent=s; strip.appendChild(d); });
+      const targetRow=syms.length-2;
+      const finalY=-(targetRow*80-80);
+      const duration=900+reelIdx*250;
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        strip.style.transition=`transform ${duration}ms cubic-bezier(0.12,0.9,0.35,1)`;
+        strip.style.transform=`translateY(${finalY}px)`;
+        strip.addEventListener('transitionend',()=>resolve(),{once:true});
+      }));
+    },delayMs);
+  });
+}
+
+function evaluateSlots(results,bet){
+  const syms=results.map(i=>SLOT_SYMBOLS[i]);
+  let msg='',winReels=[];
+  if(syms[0]===syms[1]&&syms[1]===syms[2]){
+    const mult=SLOT_PAYOUTS[syms[0]]||3;
+    const gain=bet*mult; state.balance+=gain; state.wins++;
+    if(state.vip) state.balance+=gain;
+    winReels=[0,1,2];
+    if(syms[0]==='7️⃣'){ state._slotJackpot=true; msg=`<span style="color:#ffd700;font-size:1.3em">🎆 JACKPOT! +${gain} JohnCoins!</span>`; showAchievement("🎆 JACKPOT! +"+gain); }
+    else { msg=`<span style="color:limegreen">🎉 3 of a kind! +${gain} JohnCoins (${mult}x)</span>`; showAchievement("🎰 Slots: +"+gain+"!"); }
+  } else if(syms[0]===syms[1]||syms[1]===syms[2]||syms[0]===syms[2]){
+    const gain=Math.floor(bet*1.5); state.balance+=gain; state.wins++;
+    if(syms[0]===syms[1]) winReels=[0,1]; else if(syms[1]===syms[2]) winReels=[1,2]; else winReels=[0,2];
+    msg=`<span style="color:#90ff90">✨ 2 matching! +${gain} JohnCoins</span>`;
+  } else {
+    state.losses++; msg=`<span style="color:#ff6060">💀 Ingen match — tapte ${bet} JohnCoins</span>`;
+  }
+  document.getElementById('slotsResult').innerHTML=msg;
+  winReels.forEach(i=>document.getElementById('reel'+i).classList.add('reel-win'));
+  updateUI();
+}
+
+// ══════════════════════════════════════════════
+//  TRUCK BETTING
+// ══════════════════════════════════════════════
+const TRUCKS=[
+  {name:"Big Red",      emoji:"🚛", color:"#cc2200"},
+  {name:"Thunder Blue", emoji:"🚚", color:"#2255cc"},
+  {name:"Green Hauler", emoji:"🚜", color:"#229922"},
+  {name:"Golden King",  emoji:"🏎️", color:"#cc9900"},
+  {name:"Night Rider",  emoji:"🚐", color:"#553399"},
+];
+let truckState={};
+
+function openTruckBetting(){
+  screen('truckBetting');
+  truckState={ racing:false, selectedTruck:null, positions:TRUCKS.map(()=>0), done:false };
+  renderTruckTrack();
+  document.getElementById('truckRaceResult').innerHTML='';
+  document.getElementById('raceProgressFill').style.width='0%';
+  document.getElementById('truckStartBtn').disabled=false;
+  document.getElementById('truckHintInfo').innerText=`💡 Hints: ${state.hints} — bruk hint for å se favoritt`;
+  document.getElementById('truckBetInfo').innerText='Velg en lastebil å satse på!';
+}
+
+function renderTruckTrack(){
+  const track=document.getElementById('truckTrack');
+  if(!track) return;
+  const odds=[2.1,3.5,2.8,4.0,2.5];
+  track.innerHTML=TRUCKS.map((t,i)=>{
+    const sel=truckState.selectedTruck===i;
+    return `<div class="track-lane">
+      <div class="truck-name" style="color:${t.color}">${t.emoji} ${t.name}</div>
+      <div class="truck-track" id="track_${i}">
+        <div class="truck-road-line"></div>
+        <div class="truck-icon" id="truck_${i}" style="left:1%">${t.emoji}</div>
+      </div>
+      <div class="truck-odds">${odds[i]}x</div>
+      <button class="bet-truck-btn ${sel?'selected':''}" onclick="selectTruck(${i})">
+        ${sel?'✅ Valgt':'Velg'}
+      </button>
+    </div>`;
+  }).join('');
+  truckState.odds=odds;
+}
+
+function selectTruck(i){
+  if(truckState.racing) return;
+  truckState.selectedTruck=i;
+  renderTruckTrack();
+  document.getElementById('truckBetInfo').innerText=`Valgt: ${TRUCKS[i].emoji} ${TRUCKS[i].name} (${truckState.odds[i]}x)`;
+}
+
+function startRace(){
+  if(truckState.racing) return;
+  if(truckState.selectedTruck===null){ showAchievement('⚠️ Velg en lastebil først!'); return; }
+  const bet=parseInt(document.getElementById('truckBetAmt').value)||100;
+  if(bet<50){ showAchievement('⚠️ Minste innsats: 50'); return; }
+  if(bet>state.balance){ showAchievement('❌ Ikke nok JohnCoins'); return; }
+  if(bet>=1000) state._bigBet=true;
+  state.balance-=bet; state.truckRaces++; state.gamesPlayed++;
+  updateUI();
+  truckState.racing=true; truckState.positions=TRUCKS.map(()=>0);
+  truckState.speeds=TRUCKS.map(()=>Math.random()*1.2+0.5);
+  truckState.bet=bet; truckState.done=false;
+  document.getElementById('truckStartBtn').disabled=true;
+  document.getElementById('truckRaceResult').innerHTML='🏁 Race started!';
+  document.getElementById('raceProgressFill').style.width='0%';
+
+  let frame=0, totalFrames=200, winner=-1;
+  const interval=setInterval(()=>{
+    frame++;
+    // Randomize speeds slightly each frame
+    truckState.speeds=truckState.speeds.map(s=>Math.max(0.3,Math.min(2.5,s+(Math.random()-0.48)*0.15)));
+    truckState.positions=truckState.positions.map((p,i)=>Math.min(98,p+truckState.speeds[i]*0.5));
+    // Update truck icons
+    TRUCKS.forEach((_,i)=>{
+      const el=document.getElementById('truck_'+i);
+      if(el) el.style.left=truckState.positions[i]+'%';
+    });
+    document.getElementById('raceProgressFill').style.width=(frame/totalFrames*100)+'%';
+    // Check winner
+    const maxPos=Math.max(...truckState.positions);
+    if(maxPos>=98&&winner===-1){ winner=truckState.positions.indexOf(maxPos); }
+    if(frame>=totalFrames){
+      clearInterval(interval);
+      if(winner===-1) winner=truckState.positions.indexOf(Math.max(...truckState.positions));
+      finishRace(winner,bet);
+    }
+  },30);
+}
+
+function finishRace(winner,bet){
+  truckState.racing=false; truckState.done=true;
+  const winEl=document.getElementById('truck_'+winner);
+  if(winEl) winEl.classList.add('winner-bounce');
+  document.getElementById('raceProgressFill').style.width='100%';
+  const resEl=document.getElementById('truckRaceResult');
+  if(winner===truckState.selectedTruck){
+    const gain=Math.floor(bet*truckState.odds[winner]);
+    state.balance+=gain; state.wins++; state._truckWins++;
+    resEl.innerHTML=`<span style="color:limegreen">🏆 ${TRUCKS[winner].emoji} ${TRUCKS[winner].name} vinner! Du vant ${gain} JohnCoins!</span>`;
+    showAchievement("🚛 Truck vant! +"+gain);
+  } else {
+    state.losses++;
+    if(state.lucky){ state.balance+=bet; state.lucky=false; state._luckySaved=true; showAchievement("🍀 Lucky Card reddet deg!"); }
+    resEl.innerHTML=`<span style="color:#ff6060">💀 ${TRUCKS[winner].emoji} ${TRUCKS[winner].name} vant — du tapte ${bet} JohnCoins</span>`;
+  }
+  document.getElementById('truckStartBtn').disabled=false;
+  updateUI();
+}
+
+function useHintTruck(){
+  if(state.hints<=0){ showAchievement('❌ Ingen hints igjen! Kjøp i Shop.'); return; }
+  state.hints--;
+  // Reveal which truck has best odds (lowest index in speeds if race not started = random favorite)
+  const fav=Math.floor(Math.random()*TRUCKS.length);
+  showAchievement(`💡 Hint: ${TRUCKS[fav].emoji} ${TRUCKS[fav].name} ser sterk ut!`);
+  updateUI();
+}
+
+// ══════════════════════════════════════════════
+//  TEXAS HOLD'EM
+// ══════════════════════════════════════════════
+function rankVal(r){ return RANK_VAL[r]||parseInt(r); }
+function evaluateHand(cards){
+  const combos=getCombinations(cards,5); let best=null;
+  combos.forEach(c=>{ const s=score5(c); if(!best||s.value>best.value) best={...s,cards:c}; });
+  return best;
+}
+function getCombinations(arr,k){
+  if(k===arr.length) return [arr.slice()]; if(k===1) return arr.map(x=>[x]);
+  const result=[]; arr.forEach((x,i)=>{ getCombinations(arr.slice(i+1),k-1).forEach(c=>result.push([x,...c])); }); return result;
+}
+function score5(cards){
+  const vals=cards.map(c=>rankVal(c.rank)).sort((a,b)=>a-b);
+  const suits=cards.map(c=>c.suit);
+  const flush=suits.every(s=>s===suits[0]);
+  const straight=(vals[4]-vals[0]===4&&new Set(vals).size===5)||(vals.join(',')===('2,3,4,5,14'));
+  const counts={}; vals.forEach(v=>counts[v]=(counts[v]||0)+1);
+  const freq=Object.values(counts).sort((a,b)=>b-a);
+  let rank=0,name='';
+  if(flush&&straight){rank=8;name='Straight Flush';}
+  else if(freq[0]===4){rank=7;name='Four of a Kind';}
+  else if(freq[0]===3&&freq[1]===2){rank=6;name='Full House';}
+  else if(flush){rank=5;name='Flush';}
+  else if(straight){rank=4;name='Straight';}
+  else if(freq[0]===3){rank=3;name='Three of a Kind';}
+  else if(freq[0]===2&&freq[1]===2){rank=2;name='Two Pair';}
+  else if(freq[0]===2){rank=1;name='One Pair';}
+  else{rank=0;name='High Card';}
+  const value=rank*1e10+vals.reduceRight((acc,v,i)=>acc+v*Math.pow(100,i),0);
+  return {rank,name,value,vals};
+}
+
+let pk={};
+function openTexasHoldem(){
+  screen('texasHoldem');
+  document.getElementById('communityCards').innerHTML='';
+  document.getElementById('playerHand').innerHTML='';
+  document.getElementById('dealerHand').innerHTML='';
+  document.getElementById('pokerInfo').innerText='Press "New Hand" to start.';
+  document.getElementById('pokerPot').innerText='0';
+  document.getElementById('raiseDisplay').innerText='';
+  document.getElementById('chipRow').style.display='none';
+  document.getElementById('pokerActions').innerHTML=`<button class="pbtn pbtn-new" onclick="newPokerHand()">🃏 New Hand</button>`;
+}
+function newPokerHand(){
+  const ante=100;
+  if(state.balance<ante){ showAchievement('❌ Ikke nok JohnCoins (trenger 100)'); return; }
+  const deck=buildDeck();
+  pk={ deck, player:[deck.pop(),deck.pop()], dealer:[deck.pop(),deck.pop()], community:[], pot:0, playerBet:0, dealerBet:0, dealerChips:parseInt(document.getElementById('dealerChips').innerText)||2000, blind:ante, street:'preflop', playerFolded:false, raiseAmount:0, done:false };
+  state.balance-=ante; pk.pot+=ante; pk.playerBet=ante;
+  pk.dealerChips-=ante/2; pk.pot+=ante/2; pk.dealerBet=ante/2;
+  state.gamesPlayed++; state.pokerHands++;
+  updateUI(); renderPoker();
+}
+function renderPoker(){
+  const cc=document.getElementById('communityCards'); cc.innerHTML='';
+  (pk.community||[]).forEach(c=>{ const d=document.createElement('div'); d.className='pcard'; d.style.color=cardColor(c); d.textContent=cardLabel(c); cc.appendChild(d); });
+  const rem=5-(pk.community||[]).length;
+  for(let i=0;i<rem;i++){ const d=document.createElement('div'); d.className='pcard face-down'; d.textContent='🂠'; cc.appendChild(d); }
+  const ph=document.getElementById('playerHand'); ph.innerHTML='';
+  pk.player.forEach(c=>{ const d=document.createElement('div'); d.className='pcard'; d.style.color=cardColor(c); d.textContent=cardLabel(c); ph.appendChild(d); });
+  const dh=document.getElementById('dealerHand'); dh.innerHTML='';
+  pk.dealer.forEach((c,i)=>{
+    const d=document.createElement('div');
+    if(pk.done||pk.street==='showdown'){ d.className='pcard'; d.style.color=cardColor(c); d.textContent=cardLabel(c); }
+    else { d.className='pcard face-down'; d.textContent='🂠'; }
+    dh.appendChild(d);
+  });
+  document.getElementById('pokerPot').innerText=pk.pot;
+  document.getElementById('dealerChips').innerText=pk.dealerChips;
+  document.getElementById('raiseDisplay').innerText=pk.raiseAmount>0?`Raise: ${pk.raiseAmount} JohnCoins`:'';
+  if(pk.community.length>=3&&!pk.done){
+    const hand=evaluateHand([...pk.player,...pk.community]);
+    document.getElementById('pokerInfo').innerText=`🃏 Din hånd: ${hand.name}`;
+  }
+  renderPokerActions();
+  document.getElementById('chipRow').style.display=(pk.street&&!pk.done)?'flex':'none';
+}
+function renderPokerActions(){
+  const acts=document.getElementById('pokerActions');
+  if(pk.done){ acts.innerHTML=`<button class="pbtn pbtn-new" onclick="newPokerHand()">🃏 Ny hånd</button>`; return; }
+  const callAmt=pk.dealerBet-pk.playerBet;
+  const canCheck=callAmt<=0;
+  acts.innerHTML=`
+    <button class="pbtn pbtn-fold" onclick="pokerFold()">Fold</button>
+    ${canCheck?`<button class="pbtn pbtn-check" onclick="pokerCheck()">Check</button>`:`<button class="pbtn pbtn-call" onclick="pokerCall()">Call ${callAmt}</button>`}
+    <button class="pbtn pbtn-raise" onclick="pokerRaise()">Raise ↑</button>
+    <button class="pbtn pbtn-allin" onclick="pokerAllIn()">All-In 🔥</button>
+  `;
+}
+function addRaise(n){ pk.raiseAmount=(pk.raiseAmount||0)+n; document.getElementById('raiseDisplay').innerText=`Raise: ${pk.raiseAmount} JohnCoins`; }
+function clearRaise(){ pk.raiseAmount=0; document.getElementById('raiseDisplay').innerText=''; }
+function pokerFold(){ pk.done=true; pk.playerFolded=true; pk.dealerChips+=pk.pot; document.getElementById('pokerInfo').innerText=`😔 Du foldet. Dealer vinner potten (${pk.pot}).`; state.losses++; renderPoker(); updateUI(); }
+function pokerCall(){
+  const callAmt=pk.dealerBet-pk.playerBet;
+  if(callAmt>state.balance){ showAchievement('❌ Ikke nok JohnCoins!'); return; }
+  state.balance-=callAmt; pk.pot+=callAmt; pk.playerBet+=callAmt; advanceStreet();
+}
+function pokerCheck(){
+  if(Math.random()<0.4&&pk.dealerChips>=50){ const r=50; pk.dealerBet+=r; pk.dealerChips-=r; pk.pot+=r; document.getElementById('pokerInfo').innerText=`🤖 Dealer bet ${r} — kall eller fold!`; renderPokerActions(); return; }
+  advanceStreet();
+}
+function pokerRaise(){
+  const raise=pk.raiseAmount||100;
+  if(raise>state.balance){ showAchievement('❌ Ikke nok JohnCoins!'); return; }
+  state.balance-=raise; pk.pot+=raise; pk.playerBet+=raise; pk.raiseAmount=0;
+  document.getElementById('raiseDisplay').innerText='';
+  if(Math.random()<0.6&&pk.dealerChips>=raise){ pk.dealerChips-=raise; pk.pot+=raise; pk.dealerBet+=raise; document.getElementById('pokerInfo').innerText='🤖 Dealer caller...'; }
+  else { const gain=pk.pot; state.balance+=gain; state.wins++; state._pokerWins++; pk.done=true; showAchievement('♠️ Poker: +'+gain+'!'); updateUI(); renderPoker(); return; }
+  advanceStreet();
+}
+function pokerAllIn(){
+  const allIn=state.balance; state.balance=0; pk.pot+=allIn; pk.playerBet+=allIn;
+  pk.dealerChips-=Math.min(allIn,pk.dealerChips); pk.pot+=Math.min(allIn,pk.dealerChips); pk.dealerBet=pk.playerBet;
+  while(pk.community.length<5) pk.community.push(pk.deck.pop());
+  pokerShowdown();
+}
+function advanceStreet(){
+  if(pk.street==='preflop'){ pk.street='flop'; pk.community.push(pk.deck.pop(),pk.deck.pop(),pk.deck.pop()); pk.dealerBet=0; pk.playerBet=0; }
+  else if(pk.street==='flop'){ pk.street='turn'; pk.community.push(pk.deck.pop()); pk.dealerBet=0; pk.playerBet=0; }
+  else if(pk.street==='turn'){ pk.street='river'; pk.community.push(pk.deck.pop()); pk.dealerBet=0; pk.playerBet=0; }
+  else if(pk.street==='river'){ pk.street='showdown'; pokerShowdown(); return; }
+  renderPoker(); updateUI();
+}
+function pokerShowdown(){
+  pk.done=true;
+  const pHand=evaluateHand([...pk.player,...pk.community]);
+  const dHand=evaluateHand([...pk.dealer,...pk.community]);
+  let msg;
+  if(pHand.value>dHand.value){ const gain=state.vip?pk.pot*2:pk.pot; state.balance+=gain; state.wins++; state._pokerWins++; msg=`<span style="color:limegreen">🎉 Du vinner! ${pHand.name} vs ${dHand.name}. +${gain}!</span>`; showAchievement('♠️ Poker: +'+gain+'!'); }
+  else if(pHand.value===dHand.value){ state.balance+=Math.floor(pk.pot/2); msg=`<span style="color:gold">🤝 Uavgjort! ${pHand.name}.</span>`; }
+  else { pk.dealerChips+=pk.pot; state.losses++; msg=`<span style="color:#ff6060">😔 Dealer: ${dHand.name} vs din ${pHand.name}.</span>`; }
+  document.getElementById('pokerInfo').innerHTML=msg;
+  setTimeout(()=>document.querySelectorAll('#dealerHand .pcard').forEach(c=>c.classList.add('highlight')),300);
+  renderPoker(); updateUI();
+}
+
+// ══════════════════════════════════════════════
+//  ROULETTE  — FIXED: wheel stays after spin
+// ══════════════════════════════════════════════
+const RSLOTS=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+const RSLOT_COLOR=n=>{ if(n===0) return 'green'; return [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n)?'red':'black'; };
+const BET_TYPES={
+  red:   {label:'🔴 Rød',       mult:2,  test:n=>n>0&&RSLOT_COLOR(n)==='red'},
+  black: {label:'⚫ Sort',      mult:2,  test:n=>n>0&&RSLOT_COLOR(n)==='black'},
+  green: {label:'💚 0 (Grønn)', mult:36, test:n=>n===0},
+  odd:   {label:'Odde',         mult:2,  test:n=>n>0&&n%2!==0},
+  even:  {label:'Partall',      mult:2,  test:n=>n>0&&n%2===0},
+  low:   {label:'1–18',         mult:2,  test:n=>n>=1&&n<=18},
+  high:  {label:'19–36',        mult:2,  test:n=>n>=19&&n<=36},
+  dozen1:{label:'1–12',         mult:3,  test:n=>n>=1&&n<=12},
+  dozen2:{label:'13–24',        mult:3,  test:n=>n>=13&&n<=24},
+  dozen3:{label:'25–36',        mult:3,  test:n=>n>=25&&n<=36},
+};
+
+let rCurrentBet=null, rSpinning=false;
+// Persistent wheel state — only resets when navigating away, not after spin
+let rWheelAngle=0, rBallAngle=0, rBallRadius=0;
+let rCanvas=null, rCtx=null, rRAF=null, rSpinPhase='idle';
+let rResultSlot=-1;
+
+function initRouletteCanvas(){
+  rCanvas=document.getElementById('rouletteCanvas');
+  if(!rCanvas) return;
+  rCtx=rCanvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const size=Math.min(window.innerWidth-40,420);
+  rCanvas.style.width=size+'px'; rCanvas.style.height=size+'px';
+  rCanvas.width=size*dpr; rCanvas.height=size*dpr;
+  rCtx.scale(dpr,dpr); rCanvas._size=size;
+  drawRoulette();
+}
+function buildNumberBtns(){
+  const c=document.getElementById('numberBtns'); if(!c||c.children.length>0) return;
+  let html='';
+  for(let n=0;n<=36;n++){
+    const col=RSLOT_COLOR(n); const cls=col==='red'?'num-r':col==='green'?'num-g':'num-b';
+    html+=`<button class="rbet ${cls}" id="rb_num_${n}" onclick="setRBet('num_${n}')">${n}<span class="payout-tag">36x</span></button>`;
+  }
+  c.innerHTML=html;
+}
+function setRBet(key){
+  rCurrentBet=key;
+  document.querySelectorAll('.rbet').forEach(b=>b.classList.remove('sel'));
+  const btn=document.getElementById(key.startsWith('num_')?'rb_'+key:'rb_'+key);
+  if(btn) btn.classList.add('sel');
+  let label;
+  if(key.startsWith('num_')){ const n=parseInt(key.split('_')[1]); label=`Nummer ${n} (36x)`; }
+  else { const bt=BET_TYPES[key]; label=`${bt.label} (${bt.mult}x)`; }
+  document.getElementById('betDisplay').innerText=`Valgt: ${label}`;
+}
+function openRealRoulette(){
+  screen('realRoulette');
+  rCurrentBet=null; rSpinPhase='idle'; rResultSlot=-1;
+  document.getElementById('rouletteResult').innerText='';
+  document.getElementById('betDisplay').innerText='';
+  document.querySelectorAll('.rbet').forEach(b=>b.classList.remove('sel'));
+  buildNumberBtns();
+  setTimeout(initRouletteCanvas,30);
+}
+function spinWheel(){
+  if(rSpinning) return;
+  if(!rCurrentBet){ showAchievement('⚠️ Velg et felt først!'); return; }
+  const betAmount=parseInt(document.getElementById('rouletteBet').value)||100;
+  if(betAmount<50){ showAchievement('⚠️ Minste innsats: 50'); return; }
+  if(betAmount>state.balance){ showAchievement('❌ Ikke nok JohnCoins'); return; }
+  if(betAmount>=1000) state._bigBet=true;
+  if(!rCanvas) initRouletteCanvas();
+  state.balance-=betAmount; updateUI();
+  rSpinning=true; rSpinPhase='spinning';
+  document.getElementById('rouletteResult').innerText='🎰 Snurrer...';
+  rResultSlot=RSLOTS[Math.floor(Math.random()*RSLOTS.length)];
+  const resultIdx=RSLOTS.indexOf(rResultSlot);
+  const sliceAngle=(Math.PI*2)/RSLOTS.length;
+  let wheelOmega=-(0.6+Math.random()*0.4), ballOmega=5+Math.random()*3;
+  rBallRadius=rCanvas._size/2*0.84;
+  const totalSpin=5.5, totalFrames=Math.round(totalSpin*60);
+  let frameCount=0;
+  // Target final wheel angle
+  const finalWheelAngle=-Math.PI/2-resultIdx*sliceAngle-sliceAngle/2;
+  if(rRAF) cancelAnimationFrame(rRAF);
+  function animate(){
+    frameCount++;
+    const t=frameCount/totalFrames;
+    const innerR=rCanvas._size/2*0.72, outerBallR=rCanvas._size/2*0.84;
+    if(t<0.55){
+      rWheelAngle+=wheelOmega*(Math.PI/180)*(1-t*0.3);
+      rBallAngle +=ballOmega *(Math.PI/180)*(1-t*0.2);
+      rBallRadius=outerBallR;
+    } else if(t<0.85){
+      const ph=(t-0.55)/0.30, ea=ph*ph;
+      rWheelAngle+=wheelOmega*(Math.PI/180)*(1-ea*0.8);
+      ballOmega*=0.985; rBallAngle+=ballOmega*(Math.PI/180);
+      rBallRadius=outerBallR-(outerBallR-innerR*1.08)*ea;
+    } else {
+      rWheelAngle+=(finalWheelAngle-rWheelAngle)*0.08;
+      ballOmega*=0.93;
+      const targetBallAngle=rWheelAngle+resultIdx*sliceAngle;
+      rBallAngle+=(targetBallAngle-rBallAngle)*0.12;
+      const ph=(t-0.85)/0.15;
+      rBallRadius=innerR*1.08+(innerR*0.55-innerR*1.08)*(ph*ph);
+      rBallRadius=Math.max(innerR*0.55,rBallRadius);
+    }
+    drawRoulette();
+    if(frameCount<totalFrames){ rRAF=requestAnimationFrame(animate); }
+    else{
+      // Lock wheel exactly and stop — DO NOT reset
+      rWheelAngle=finalWheelAngle;
+      rBallAngle=finalWheelAngle+resultIdx*sliceAngle;
+      rBallRadius=rCanvas._size/2*0.72*0.62;
+      rSpinPhase='done';
+      drawRoulette(); // final draw, stays
+      rSpinning=false;
+      state.rouletteSpins++;
+      // Evaluate
+      const n=rResultSlot, col=RSLOT_COLOR(n);
+      const colEmoji=col==='red'?'🔴':col==='green'?'💚':'⚫';
+      let won=false, mult=0;
+      if(rCurrentBet.startsWith('num_')){ const p=parseInt(rCurrentBet.split('_')[1]); won=p===n; mult=36; }
+      else { const bt=BET_TYPES[rCurrentBet]; won=bt.test(n); mult=bt.mult; }
+      const resEl=document.getElementById('rouletteResult');
+      if(won){ const gain=betAmount*mult; state.balance+=gain; resEl.innerHTML=`<span style="color:limegreen">${colEmoji} ${n} — 🎉 Vant! +${gain} JohnCoins (${mult}x)</span>`; showAchievement(`🎉 Roulette: +${gain}!`); }
+      else { resEl.innerHTML=`<span style="color:#ff6060">${colEmoji} ${n} — Tapte ${betAmount} JohnCoins 💀</span>`; showAchievement(`💀 Roulette: -${betAmount}`); }
+      updateUI();
+    }
+  }
+  rRAF=requestAnimationFrame(animate);
+}
+function drawRoulette(){
+  const cvs=rCanvas, ctx=rCtx; if(!ctx) return;
+  const S=cvs._size||420, cx=S/2, cy=S/2, R=S/2-8, Ri=R*0.72, Rc=R*0.38, n=RSLOTS.length;
+  const sliceAngle=(Math.PI*2)/n;
+  ctx.clearRect(0,0,S,S);
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.fillStyle='#5c2e00'; ctx.fill();
+  const grad=ctx.createRadialGradient(cx,cy,Ri*0.98,cx,cy,R*0.98);
+  grad.addColorStop(0,'#888'); grad.addColorStop(0.4,'#ccc'); grad.addColorStop(1,'#555');
+  ctx.beginPath(); ctx.arc(cx,cy,R*0.98,0,Math.PI*2); ctx.arc(cx,cy,Ri,0,Math.PI*2,true); ctx.fillStyle=grad; ctx.fill();
+  RSLOTS.forEach((num,i)=>{
+    const startA=rWheelAngle+i*sliceAngle-sliceAngle/2, endA=startA+sliceAngle;
+    const highlight=rSpinPhase==='done'&&num===rResultSlot;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,Ri,startA,endA); ctx.closePath();
+    const col=RSLOT_COLOR(num); ctx.fillStyle=col==='green'?'#006400':col==='red'?'#c00':'#111'; ctx.fill();
+    if(highlight){ ctx.strokeStyle='#ffd700'; ctx.lineWidth=4; ctx.stroke(); }
+    else{ ctx.strokeStyle='#888'; ctx.lineWidth=0.8; ctx.stroke(); }
+    const midA=startA+sliceAngle/2, tr=(Ri+Rc)/2;
+    ctx.save(); ctx.translate(cx+Math.cos(midA)*tr,cy+Math.sin(midA)*tr); ctx.rotate(midA+Math.PI/2);
+    ctx.font=`bold ${Math.max(8,S*0.028)}px sans-serif`; ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(num,0,0); ctx.restore();
+  });
+  const hubGrad=ctx.createRadialGradient(cx,cy,0,cx,cy,Rc);
+  hubGrad.addColorStop(0,'#ffd700'); hubGrad.addColorStop(0.6,'#a07800'); hubGrad.addColorStop(1,'#5c3a00');
+  ctx.beginPath(); ctx.arc(cx,cy,Rc,0,Math.PI*2); ctx.fillStyle=hubGrad; ctx.fill();
+  ctx.strokeStyle='#ffd700'; ctx.lineWidth=2; ctx.stroke();
+  for(let i=0;i<8;i++){
+    const a=rWheelAngle+(i/8)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx+Math.cos(a)*Rc,cy+Math.sin(a)*Rc); ctx.lineTo(cx+Math.cos(a)*Ri*0.55,cy+Math.sin(a)*Ri*0.55);
+    ctx.strokeStyle='rgba(255,215,0,0.5)'; ctx.lineWidth=2; ctx.stroke();
+  }
+  ctx.beginPath(); ctx.moveTo(cx,cy-R+2); ctx.lineTo(cx-10,cy-R+22); ctx.lineTo(cx+10,cy-R+22); ctx.closePath(); ctx.fillStyle='#ffd700'; ctx.fill();
+  if(rBallRadius>0){
+    const bx=cx+Math.cos(rBallAngle)*rBallRadius, by=cy+Math.sin(rBallAngle)*rBallRadius;
+    const ballR=Math.max(5,S*0.022);
+    ctx.beginPath(); ctx.arc(bx+2,by+2,ballR,0,Math.PI*2); ctx.fillStyle='rgba(0,0,0,0.4)'; ctx.fill();
+    const bGrad=ctx.createRadialGradient(bx-ballR*0.3,by-ballR*0.3,1,bx,by,ballR);
+    bGrad.addColorStop(0,'#fff'); bGrad.addColorStop(0.4,'#ddd'); bGrad.addColorStop(1,'#aaa');
+    ctx.beginPath(); ctx.arc(bx,by,ballR,0,Math.PI*2); ctx.fillStyle=bGrad; ctx.fill();
+  }
+}
+
+// ══════════════════════════════════════════════
+//  TOURNAMENTS
+// ══════════════════════════════════════════════
+const TOURN_GAMES=[
+  {id:'blackjack', label:'🃏 Blackjack'},
+  {id:'roulette',  label:'🎡 Roulette'},
+  {id:'slots',     label:'🎰 Slots'},
+  {id:'poker',     label:'♠️ Poker'},
+  {id:'truck',     label:'🚛 Truck Betting'},
+];
+const TOURN_DIFFS=[
+  {id:'easy',  label:'Easy',  badge:'diff-easy', bots:['🤖 Rookie','🤖 Newbie','🤖 Larry'],    botStrength:0.35, entryFee:100,  prize:500},
+  {id:'medium',label:'Medium',badge:'diff-med',  bots:['🤖 GambleBot','🤖 VegasV2','🤖 SlickBot'],botStrength:0.5, entryFee:300,  prize:2000},
+  {id:'hard',  label:'Hard',  badge:'diff-hard', bots:['🤖 CasinoGod','🤖 ProfitMax','🤖 Xtreme'],botStrength:0.7, entryFee:700,  prize:6000},
+];
+let currentTournGame='blackjack';
+
+function openTournaments(){
+  screen('tournaments');
+  renderTournTabs();
+  renderTournContent();
+}
+function renderTournTabs(){
+  const tabs=document.getElementById('tournTabs');
+  tabs.innerHTML=TOURN_GAMES.map(g=>`
+    <div class="tourn-tab ${g.id===currentTournGame?'active':''}" onclick="selectTournGame('${g.id}')">${g.label}</div>
+  `).join('');
+}
+function selectTournGame(id){ currentTournGame=id; renderTournTabs(); renderTournContent(); }
+function renderTournContent(){
+  const game=TOURN_GAMES.find(g=>g.id===currentTournGame);
+  const content=document.getElementById('tournContent');
+  content.innerHTML=TOURN_DIFFS.map(diff=>`
+    <div class="tournament-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <h3>${game.label}</h3>
+        <span class="diff-badge ${diff.badge}">${diff.label}</span>
+      </div>
+      <div style="margin-bottom:8px">
+        <div class="bot-row">${diff.bots.map(b=>`<div class="bot-chip">🤖</div><span>${b}</span>`).join('<div style="flex:1"></div>')}</div>
+      </div>
+      <p style="color:#aaa;font-size:0.88em;margin-bottom:10px">
+        Entry: 🪙 ${diff.entryFee} &nbsp;|&nbsp; Prize: 🪙 ${diff.prize.toLocaleString()}
+      </p>
+      <div class="tourn-progress" id="tp_${diff.id}"></div>
+      <button class="action" onclick="playTournament('${currentTournGame}','${diff.id}')">▶ Enter Tournament</button>
+    </div>
+  `).join('');
+}
+
+function playTournament(gameId, diffId){
+  const diff=TOURN_DIFFS.find(d=>d.id===diffId);
+  if(!diff) return;
+  if(state.balance<diff.entryFee){ showAchievement(`❌ Need ${diff.entryFee} JohnCoins to enter!`); return; }
+  state.balance-=diff.entryFee; updateUI();
+  const progEl=document.getElementById('tp_'+diffId);
+  if(progEl) progEl.innerHTML='<p style="color:#aaa;animation:pulse 0.5s infinite alternate">⏳ Playing tournament...</p>';
+
+  // Simulate rounds
+  let playerScore=0, roundsPlayed=0, totalRounds=5;
+  for(let r=0;r<totalRounds;r++){
+    const playerRoll=Math.random();
+    const botRoll=Math.random()*diff.botStrength + diff.botStrength*0.3;
+    if(playerRoll > botRoll) playerScore++;
+  }
+
+  const won = playerScore >= Math.ceil(totalRounds/2);
+  setTimeout(()=>{
+    if(won){
+      state.balance+=diff.prize; state.wins++; state.tourneysWon++; state._tournamentsWon++;
+      if(progEl) progEl.innerHTML=`<p style="color:limegreen;font-weight:bold">🏆 YOU WON! ${playerScore}/${totalRounds} rounds won. +${diff.prize.toLocaleString()} JohnCoins!</p>`;
+      showAchievement(`🏆 Tournament won! +${diff.prize}`);
+    } else {
+      state.losses++;
+      if(progEl) progEl.innerHTML=`<p style="color:#ff6060;font-weight:bold">😔 Lost! ${playerScore}/${totalRounds} rounds won. Lost entry fee.</p>`;
+      showAchievement(`😔 Tournament lost — ${playerScore}/${totalRounds} rounds`);
+    }
+    updateUI();
+  }, 1500);
+}
+
+// ══════════════════════════════════════════════
+//  STATS / LEADERBOARD / ACHIEVEMENTS
+// ══════════════════════════════════════════════
+function openStats(){
+  screen("stats");
+  document.getElementById("statGames").innerText     = state.gamesPlayed;
+  document.getElementById("statWins").innerText      = state.wins;
+  document.getElementById("statLosses").innerText    = state.losses;
+  document.getElementById("statSpins").innerText     = state.rouletteSpins;
+  document.getElementById("statSlotSpins").innerText = state.slotSpins;
+  document.getElementById("statPokerHands").innerText= state.pokerHands;
+  document.getElementById("statTruckRaces").innerText= state.truckRaces;
+  document.getElementById("statCases").innerText     = state.casesOpened;
+  document.getElementById("statTourneys").innerText  = state.tourneysWon;
+}
+function openLeaderboard(){
+  screen("leaderboard");
+  const all=[...leaderboardData,{name:state.activeAvatar+' '+state.playerName,score:state.balance}];
+  all.sort((a,b)=>b.score-a.score);
+  document.getElementById("leaderboardList").innerHTML=all.map((e,i)=>{
+    const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}.`;
+    const isYou=e.name.includes(state.playerName);
+    return `<div class="tournament-card" style="${isYou?'border-left-color:#fff;background:rgba(255,215,0,0.08)':''}">
+      <span style="font-size:1.2em">${medal} ${e.name}</span>
+      <span style="float:right;color:gold;font-weight:bold">${e.score.toLocaleString()} JohnCoins</span>
+    </div>`;
+  }).join('');
+}
+function openAchievements(){
+  screen("achievements");
+  const total=ACHIEVEMENTS_DEF.length, done=unlockedAchievements.size;
+  document.getElementById("achievementList").innerHTML=
+    `<p style="text-align:center;color:gold;margin-bottom:16px">${done}/${total} unlocked</p>`+
+    ACHIEVEMENTS_DEF.map(def=>{
+      const isDone=unlockedAchievements.has(def.id);
+      return `<div class="tournament-card" style="opacity:${isDone?1:0.45}">
+        <span style="font-size:1.1em">${def.label}</span>
+        <span style="float:right">${isDone?"✅":"🔒"}</span>
+        <div style="font-size:0.85em;color:#ccc;margin-top:4px">${def.desc}</div>
+      </div>`;
+    }).join('');
+}
+function openCases(){ screen("cases"); }
+function openCase(){
+  if(state.balance<500){ showAchievement("❌ Ikke nok JohnCoins"); return; }
+  state.balance-=500; state.casesOpened++;
+  const rewards=["💎 Diamond Skin","👑 Royal Avatar","🔥 XP Boost +100","💰 2000 JohnCoins","🍀 Lucky Card","💎 VIP Access","🪙 500 JohnCoins","⭐ XP +200","🤖 CyberBot Avatar"];
+  const reward=rewards[Math.floor(Math.random()*rewards.length)];
+  document.getElementById("caseItem").innerText=reward;
+  if(reward.includes("2000")) state.balance+=2000;
+  if(reward.includes("500 JohnCoins")) state.balance+=500;
+  if(reward.includes("XP +100")) state.xp+=100;
+  if(reward.includes("XP +200")) state.xp+=200;
+  if(reward.includes("Lucky")) state.lucky=true;
+  if(reward.includes("VIP")) state.vip=true;
+  showAchievement("🎁 Du fikk: "+reward);
+  updateUI();
+}
+
+// ══════════════════════════════════════════════
+//  PARTICLES
+// ══════════════════════════════════════════════
+const pCanvas=document.getElementById("particles");
+const pCtx=pCanvas.getContext("2d");
+pCanvas.width=window.innerWidth; pCanvas.height=window.innerHeight;
+window.addEventListener("resize",()=>{ pCanvas.width=window.innerWidth; pCanvas.height=window.innerHeight; });
+const particles=Array.from({length:80},()=>({
+  x:Math.random()*pCanvas.width, y:Math.random()*pCanvas.height,
+  r:Math.random()*3+1, d:Math.random()*1+0.3, drift:(Math.random()-0.5)*0.3
+}));
+function drawParticles(){
+  pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
+  pCtx.fillStyle="rgba(255,215,0,0.45)";
+  particles.forEach(p=>{
+    pCtx.beginPath(); pCtx.arc(p.x,p.y,p.r,0,Math.PI*2); pCtx.fill();
+    p.y+=p.d; p.x+=p.drift;
+    if(p.y>pCanvas.height) p.y=0;
+    if(p.x<0) p.x=pCanvas.width; if(p.x>pCanvas.width) p.x=0;
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+updateUI();
+document.body.style.background=SKIN_DEFS[state.activeSkin].bg;
+// Add hint button to truck betting page
+document.getElementById('truckHintInfo').onclick=useHintTruck;
+document.getElementById('truckHintInfo').style.cursor='pointer';
+</script>
+</body>
+</html>
